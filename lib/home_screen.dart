@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:flutter_sound/flutter_sound.dart';
+import 'package:pay_attention_to_me/widgets/recorder.dart';
 import 'constants.dart' as Constants;
 
 class HomeScreen extends StatefulWidget {
@@ -8,16 +10,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
+  AssetsAudioPlayer assetsAudioPlayer;
+  FlutterSound flutterSound;
 
   @override
   void initState() {
     super.initState();
+    // Create player instance
+    flutterSound = FlutterSound();
     assetsAudioPlayer = AssetsAudioPlayer();
     assetsAudioPlayer.openPlaylist(
       Playlist(
         assetAudioPaths:
-            Constants.voiceDataList.map((file) => file['path']).toList(),
+            Constants.voiceDataList.map((file) => file.path).toList(),
       ),
     );
     assetsAudioPlayer.stop();
@@ -29,29 +34,46 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
+    assetsAudioPlayer.stop();
     assetsAudioPlayer.dispose();
+    flutterSound.stopRecorder();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('I need attention'),
-        ),
-        body: SafeArea(
-          child: Center(
-            child: Scrollbar(
-              child: ListView(
-                children: <Widget>[
-                  for (var i = 0; i < Constants.voiceDataList.length; i++)
-                    voiceBtn(i, Constants.voiceDataList[i]['title'])
-                ],
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('I need attention'),
+      ),
+      body: SafeArea(
+        child: Center(
+          child: Scrollbar(
+            child: ListView(
+              children: <Widget>[
+                for (var i = 0; i < Constants.voiceDataList.length; i++)
+                  voiceBtn(i, Constants.voiceDataList[i].title)
+              ],
             ),
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        backgroundColor: Colors.yellowAccent,
+        foregroundColor: Colors.blueAccent,
+        onPressed: () {
+          // TODO show recorder
+          showModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return Container(
+                height: 250,
+                child: Recorder(),
+              );
+            },
+          );
+        },
       ),
     );
   }
