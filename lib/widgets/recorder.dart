@@ -17,6 +17,10 @@ enum RecorderState {
 }
 
 class Recorder extends StatefulWidget {
+  final Function onFileSaveCb;
+
+  const Recorder({this.onFileSaveCb});
+
   @override
   _RecorderState createState() => _RecorderState();
 }
@@ -27,6 +31,7 @@ class _RecorderState extends State<Recorder> {
   int _totalRecordedTime;
   String _recorderTxt = '00:00:00';
   String _recordedFilePath;
+  bool _isButtonDisabled = true;
 
   StreamSubscription<RecordStatus> _recorderSubscription;
   StreamSubscription<PlayStatus> _playerSubscription;
@@ -52,17 +57,64 @@ class _RecorderState extends State<Recorder> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.blue,
-      height: 50,
+      height: 250,
       alignment: Alignment.center,
-      child: Row(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          getRecorderButton(_recorderStatus),
-          Text(
-            '$_recorderTxt',
-            style: TextStyle(color: Colors.white),
-          )
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                getRecorderButton(_recorderStatus),
+                Text(
+                  '$_recorderTxt',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                )
+              ],
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              FlatButton(
+                disabledColor: Colors.transparent,
+                onPressed: _isButtonDisabled
+                    ? null
+                    : () async {
+                        String text = await _showFileNameDialog(context);
+                        File file = File(_recordedFilePath);
+                        Directory docDir =
+                            await getApplicationDocumentsDirectory();
+                        moveFile(file, '${docDir.path}/audio', '$text.aac');
+                        widget.onFileSaveCb();
+                        Navigator.of(context).pop();
+                      },
+                child: Text(
+                  'Save',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: _isButtonDisabled ? Colors.white24 : Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -120,7 +172,6 @@ class _RecorderState extends State<Recorder> {
       codec: t_CODEC.CODEC_AAC,
     );
 
-    print('startRecorder: $path');
     setState(() {
       _recorderStatus = RecorderState.RECORDING;
     });
@@ -139,7 +190,6 @@ class _RecorderState extends State<Recorder> {
     String path = await flutterSound.stopRecorder();
 
     // Change recorderState
-    print('stopRecorder: $path');
     setState(() {
       _recorderStatus = RecorderState.RECORD_DONE;
     });
@@ -147,6 +197,7 @@ class _RecorderState extends State<Recorder> {
 
     // Change timer text from recorder time to playable time
     setState(() {
+      _isButtonDisabled = false;
       _recorderTxt = getTimeInFormat(_totalRecordedTime).substring(0, 8);
     });
 
@@ -158,9 +209,8 @@ class _RecorderState extends State<Recorder> {
   }
 
   Future<void> startPlayer() async {
-    String path = await flutterSound.startPlayer(_recordedFilePath);
+    await flutterSound.startPlayer(_recordedFilePath);
 
-    print('startPlayer: $path');
     setState(() {
       _recorderStatus = RecorderState.PLAYING;
     });
@@ -178,14 +228,14 @@ class _RecorderState extends State<Recorder> {
   }
 
   Future<void> pausePlayer() async {
-    String result = await flutterSound.pausePlayer();
+    await flutterSound.pausePlayer();
     setState(() {
       _recorderStatus = RecorderState.PAUSED;
     });
   }
 
   Future<void> resumePlayer() async {
-    String result = await flutterSound.resumePlayer();
+    await flutterSound.resumePlayer();
     setState(() {
       _recorderStatus = RecorderState.PLAYING;
     });
@@ -193,8 +243,7 @@ class _RecorderState extends State<Recorder> {
 
   Future<void> stopPlayer({playerStopped = false}) async {
     if (!playerStopped) {
-      String path = await flutterSound.stopPlayer();
-      print('stopPlayer: $path');
+      await flutterSound.stopPlayer();
     }
 
     setState(() {
@@ -205,5 +254,53 @@ class _RecorderState extends State<Recorder> {
       _playerSubscription.cancel();
       _playerSubscription = null;
     }
+  }
+
+  Future<File> moveFile(
+      File sourceFile, String newPath, String fileName) async {
+    try {
+      // rename is faster than copy
+      return await sourceFile.rename('$newPath/$fileName');
+    } on FileSystemException catch (err) {
+      // if rename fails, copy the source file and delete it after copying
+      final newFile = await sourceFile.copy('$newPath/$fileName');
+      await sourceFile.delete();
+      return newFile;
+    }
+  }
+
+  Future<String> _showFileNameDialog(BuildContext context) async {
+    TextEditingController _textFieldController = TextEditingController();
+
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Name of your file?'),
+          content: TextField(
+              controller: _textFieldController,
+              decoration: InputDecoration(hintText: 'My file name')),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(_textFieldController.text);
+              },
+            ),
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
+    // File file = File(_recordedFilePath);
+    // Directory docDir =
+    //     await getApplicationDocumentsDirectory();
+    // moveFile(
+    //     file, '${docDir.path}/audio', 'recorder-test.aac');
   }
 }
