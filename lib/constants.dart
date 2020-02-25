@@ -12,6 +12,9 @@ const Color color5 = Color(0xffF20505);
 
 const Color color6 = Color(0xffF2CAA7);
 
+const Color correctColor = Color(0xff78BF45);
+const Color wrongColor = Color(0xffF26666);
+
 const List<Color> colorWheel = [color1, color2, color3, color4, color5];
 
 const assetPath = 'assets/sounds';

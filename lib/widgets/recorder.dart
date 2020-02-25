@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pay_attention_to_me/util/commonFileFunc.dart';
 
 enum RecorderState {
   RECORD_READY,
@@ -98,6 +99,10 @@ class _RecorderState extends State<Recorder> {
                     ? null
                     : () async {
                         String text = await _showFileNameDialog(context);
+                        if (text == null) {
+                          return;
+                        }
+
                         File file = File(_recordedFilePath);
                         Directory docDir =
                             await getApplicationDocumentsDirectory();
@@ -256,21 +261,9 @@ class _RecorderState extends State<Recorder> {
     }
   }
 
-  Future<File> moveFile(
-      File sourceFile, String newPath, String fileName) async {
-    try {
-      // rename is faster than copy
-      return await sourceFile.rename('$newPath/$fileName');
-    } on FileSystemException catch (err) {
-      // if rename fails, copy the source file and delete it after copying
-      final newFile = await sourceFile.copy('$newPath/$fileName');
-      await sourceFile.delete();
-      return newFile;
-    }
-  }
-
   Future<String> _showFileNameDialog(BuildContext context) async {
-    TextEditingController _textFieldController = TextEditingController();
+    TextEditingController _fileNameTextFieldController =
+        TextEditingController();
 
     return showDialog(
       context: context,
@@ -278,21 +271,21 @@ class _RecorderState extends State<Recorder> {
         return AlertDialog(
           title: Text('Name of your file?'),
           content: TextField(
-              controller: _textFieldController,
+              controller: _fileNameTextFieldController,
               decoration: InputDecoration(hintText: 'My file name')),
           actions: <Widget>[
-            FlatButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop(_textFieldController.text);
-              },
-            ),
             FlatButton(
               child: Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
-            )
+            ),
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(_fileNameTextFieldController.text);
+              },
+            ),
           ],
         );
       },

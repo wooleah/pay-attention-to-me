@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
-// import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:pay_attention_to_me/util/commonFileFunc.dart';
 import 'package:pay_attention_to_me/widgets/recorder.dart';
 import 'constants.dart' as Constants;
+import 'models/audiofile.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -15,7 +17,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   FlutterSound flutterSound;
   // AssetsAudioPlayer assetsAudioPlayer;
-  List<FileSystemEntity> _fileList = new List();
+  // List<FileSystemEntity> _audioFileList = new List();
+  List<AudioFile> _audioFileList = new List();
 
   @override
   void initState() {
@@ -23,89 +26,107 @@ class _HomeScreenState extends State<HomeScreen> {
     flutterSound = FlutterSound();
 
     _getListOfFiles();
-    // Create player instance
-    // assetsAudioPlayer = AssetsAudioPlayer();
-    // assetsAudioPlayer.openPlaylist(
-    //   Playlist(
-    //     assetAudioPaths:
-    //         Constants.voiceDataList.map((file) => file.path).toList(),
-    //   ),
-    // );
-    // assetsAudioPlayer.stop();
-
-    // assetsAudioPlayer.finished.listen((finished) {
-    //   assetsAudioPlayer.stop();
-    // });
   }
 
   @override
   void dispose() {
-    // assetsAudioPlayer.stop();
-    // assetsAudioPlayer.dispose();
     // if (_recorderStatus == RecorderState.PLAYING) {
     //   flutterSound.stopPlayer();
     // }
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('I need attention'),
-      ),
-      body: SafeArea(
-        child: Center(
-          child: Scrollbar(
-            child: ListView.builder(
-              itemCount: _fileList.length,
-              itemBuilder: (context, index) {
-                // return voiceBtn(index, Constants.voiceDataList[index].title);
-                return voiceBtn(index, _fileList[index].uri.toString());
-              },
-              // children: <Widget>[
-              //   for (var i = 0; i < Constants.voiceDataList.length; i++)
-              //     voiceBtn(i, Constants.voiceDataList[i].title)
-              // ],
+  Widget _getVoiceItem(BuildContext context, int index) {
+    AudioFile audioFile = _audioFileList[index];
+    final Color itemColor =
+        Constants.colorWheel[index % Constants.colorWheel.length];
+    File file = File(audioFile.path);
+
+    return Slidable(
+      key: Key(audioFile.uri),
+      actionPane: SlidableScrollActionPane(),
+      actionExtentRatio: 0.25,
+      child: InkWell(
+        onTap: () => startPlayer(audioFile.path),
+        child: Container(
+          height: 100,
+          alignment: Alignment.center,
+          child: Text(
+            audioFile.title,
+            style: TextStyle(
+              fontSize: 24,
+              color: Colors.white,
             ),
           ),
+          color: itemColor,
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        backgroundColor: Colors.yellowAccent,
-        foregroundColor: Colors.blueAccent,
-        onPressed: () {
-          // TODO show recorder
-          showModalBottomSheet(
-            context: context,
-            builder: (context) {
-              return Recorder(
-                onFileSaveCb: _getListOfFiles,
-              );
-            },
-          );
-        },
-      ),
+      secondaryActions: <Widget>[
+        IconSlideAction(
+          color: Constants.correctColor,
+          iconWidget: Icon(
+            Icons.edit,
+            color: Colors.white,
+          ),
+          onTap: () async {
+            String newFileName =
+                await _showFileNameDialog(context, audioFile.title);
+            if (newFileName == null) {
+              return;
+            }
+
+            Directory docDir = await getApplicationDocumentsDirectory();
+            File newFile = await moveFile(
+                file, '${docDir.path}/audio', '$newFileName.aac');
+
+            setState(() {
+              _audioFileList[index]
+                  .update(newTitle: newFileName, newPath: newFile.path);
+            });
+          },
+        ),
+        IconSlideAction(
+          color: Constants.wrongColor,
+          icon: Icons.delete_forever,
+          onTap: () {
+            file.delete();
+            setState(() {
+              _audioFileList.removeAt(index);
+            });
+          },
+        ),
+      ],
     );
   }
 
-  Widget voiceBtn(int index, String uri, [Color color]) {
-    final Color itemColor =
-        color ?? Constants.colorWheel[index % Constants.colorWheel.length];
-    return SizedBox(
-      height: 100,
-      child: RaisedButton(
-        onPressed: () {
-          // assetsAudioPlayer.playlistPlayAtIndex(index);
-          startPlayer(uri);
-        },
-        child: Text(
-          Uri.decodeFull(path.basenameWithoutExtension(uri)),
-          style: TextStyle(fontSize: 24, color: Colors.white),
-        ),
-        color: itemColor,
-      ),
+  Future<String> _showFileNameDialog(
+      BuildContext context, String currentName) async {
+    TextEditingController _fileNameTextFieldController =
+        TextEditingController();
+    _fileNameTextFieldController.text = currentName;
+
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Name of your file?'),
+          content: TextField(controller: _fileNameTextFieldController),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(_fileNameTextFieldController.text);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -113,7 +134,14 @@ class _HomeScreenState extends State<HomeScreen> {
     Directory docDir = await getApplicationDocumentsDirectory();
     setState(() {
       try {
-        _fileList = Directory('${docDir.path}/audio').listSync();
+        _audioFileList = Directory('${docDir.path}/audio')
+            .listSync()
+            .map((file) => new AudioFile(
+                uri: file.uri.toString(),
+                path: file.path,
+                title: path.basenameWithoutExtension(file.path)))
+            .toList();
+        // _audioFileList = Directory('${docDir.path}/audio').listSync();
       } on FileSystemException catch (err) {
         new Directory('${docDir.path}/audio').createSync();
       }
@@ -126,5 +154,39 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (err) {} finally {
       await flutterSound.startPlayer(uri);
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('I need attention'),
+      ),
+      body: SafeArea(
+        child: Center(
+          child: Scrollbar(
+            child: ListView.builder(
+              itemCount: _audioFileList.length,
+              itemBuilder: _getVoiceItem,
+            ),
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        backgroundColor: Colors.yellowAccent,
+        foregroundColor: Colors.blueAccent,
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return Recorder(
+                onFileSaveCb: _getListOfFiles,
+              );
+            },
+          );
+        },
+      ),
+    );
   }
 }
