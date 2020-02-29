@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:intl/intl.dart';
 
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pay_attention_to_me/util/commonFileFunc.dart';
@@ -19,8 +18,9 @@ enum RecorderState {
 
 class Recorder extends StatefulWidget {
   final Function onFileSaveCb;
+  final theme;
 
-  const Recorder({this.onFileSaveCb});
+  const Recorder({this.onFileSaveCb, this.theme});
 
   @override
   _RecorderState createState() => _RecorderState();
@@ -32,15 +32,18 @@ class _RecorderState extends State<Recorder> {
   int _totalRecordedTime;
   String _recorderTxt = '00:00:00';
   String _recordedFilePath;
-  bool _isButtonDisabled = true;
+  bool _isSaveButtonDisabled = true;
 
   StreamSubscription<RecordStatus> _recorderSubscription;
   StreamSubscription<PlayStatus> _playerSubscription;
+
+  TextEditingController _fileNameTextFieldController;
 
   @override
   void initState() {
     super.initState();
     flutterSound = FlutterSound();
+    _fileNameTextFieldController = TextEditingController();
   }
 
   @override
@@ -51,13 +54,14 @@ class _RecorderState extends State<Recorder> {
     if (_recorderStatus == RecorderState.PLAYING) {
       flutterSound.stopPlayer();
     }
+    _fileNameTextFieldController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.blue,
+      color: widget.theme['FABColor'],
       height: 250,
       alignment: Alignment.center,
       child: Column(
@@ -95,7 +99,7 @@ class _RecorderState extends State<Recorder> {
               ),
               FlatButton(
                 disabledColor: Colors.transparent,
-                onPressed: _isButtonDisabled
+                onPressed: _isSaveButtonDisabled
                     ? null
                     : () async {
                         String text = await _showFileNameDialog(context);
@@ -106,15 +110,15 @@ class _RecorderState extends State<Recorder> {
                         File file = File(_recordedFilePath);
                         Directory docDir =
                             await getApplicationDocumentsDirectory();
-                        moveFile(file, '${docDir.path}/audio', '$text.aac');
-                        widget.onFileSaveCb();
+                        File newFile = await moveFile(file, '${docDir.path}/audio', '$text.aac');
+                        widget.onFileSaveCb(newFile);
                         Navigator.of(context).pop();
                       },
                 child: Text(
                   'Save',
                   style: TextStyle(
                     fontSize: 20,
-                    color: _isButtonDisabled ? Colors.white24 : Colors.white,
+                    color: _isSaveButtonDisabled ? Colors.white24 : Colors.white,
                   ),
                 ),
               ),
@@ -172,7 +176,7 @@ class _RecorderState extends State<Recorder> {
   Future<void> startRecorder() async {
     Directory tempDir = await getTemporaryDirectory();
     File outputFile = File('${tempDir.path}/flutter_sound-tmp.aac');
-    String path = await flutterSound.startRecorder(
+    await flutterSound.startRecorder(
       uri: outputFile.path,
       codec: t_CODEC.CODEC_AAC,
     );
@@ -202,7 +206,7 @@ class _RecorderState extends State<Recorder> {
 
     // Change timer text from recorder time to playable time
     setState(() {
-      _isButtonDisabled = false;
+      _isSaveButtonDisabled = false;
       _recorderTxt = getTimeInFormat(_totalRecordedTime).substring(0, 8);
     });
 
@@ -262,17 +266,15 @@ class _RecorderState extends State<Recorder> {
   }
 
   Future<String> _showFileNameDialog(BuildContext context) async {
-    TextEditingController _fileNameTextFieldController =
-        TextEditingController();
-
     return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text('Name of your file?'),
           content: TextField(
-              controller: _fileNameTextFieldController,
-              decoration: InputDecoration(hintText: 'My file name')),
+            controller: _fileNameTextFieldController,
+            decoration: InputDecoration(hintText: 'My file name'),
+          ),
           actions: <Widget>[
             FlatButton(
               child: Text('Cancel'),
@@ -283,6 +285,7 @@ class _RecorderState extends State<Recorder> {
             FlatButton(
               child: Text('OK'),
               onPressed: () {
+                if (_fileNameTextFieldController.text.isEmpty) return;
                 Navigator.of(context).pop(_fileNameTextFieldController.text);
               },
             ),

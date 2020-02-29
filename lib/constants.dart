@@ -1,21 +1,103 @@
 library constants;
 
 import 'package:flutter/material.dart';
-
 import 'models/audiofile.dart';
-
-const Color color1 = Color(0xff025159);
-const Color color2 = Color(0xff03A696);
-const Color color3 = Color(0xffF28705);
-const Color color4 = Color(0xffF25D27);
-const Color color5 = Color(0xffF20505);
-
-const Color color6 = Color(0xffF2CAA7);
 
 const Color correctColor = Color(0xff78BF45);
 const Color wrongColor = Color(0xffF26666);
+const Color editColor = Colors.black;
 
-const List<Color> colorWheel = [color1, color2, color3, color4, color5];
+const ThemeList = [
+  ColorTheme_cat,
+  ColorTheme_dog,
+  ColorTheme_message,
+  ColorTheme_space,
+  ColorTheme_sunset,
+];
+
+const Map<String, dynamic> ColorTheme_dog = {
+  'themeName': 'Dog',
+  'colors': [
+    Color(0xffD97941), 
+    Color(0xff6A9988),
+    Color(0xffEDC6B2), 
+    Color(0xffBF7C63), 
+    Color(0xffA05D22), 
+  ],
+  'appTitleColor': Color(0xff4F2C18),
+  'appTitleBackgroundColor': Colors.white,
+  'FABColor': Color(0xffD97941),
+  'appBarImagePath': 'assets/images/dog.png'
+};
+
+const Map<String, dynamic> ColorTheme_cat = {
+  'themeName': 'Cat',
+  'colors': [
+    Color(0xff9CC1D9), 
+    Color(0xffA7CFF2), 
+    Color(0xff8DA6A1), 
+    Color(0xff61808C), 
+    Color(0xff403B38),
+  ],
+  'appTitleColor': Color(0xff195275),
+  'appTitleBackgroundColor': Colors.white,
+  'FABColor': Color(0xffEB7E44),
+  'appBarImagePath': 'assets/images/cat.png'
+};
+
+const Map<String, dynamic> ColorTheme_message = {
+  'themeName': 'Message',
+  'colors': [
+    Color(0xff01151A), 
+    Color(0xff92DEFF), 
+    Color(0xff25D995), 
+    Color(0xffFFE000), 
+    Color(0xffF00801)
+  ],
+  'appTitleColor': Color(0xff01151A),
+  'appTitleBackgroundColor': Colors.white,
+  'FABColor': Color(0xff01151A),
+  'appBarImagePath': 'assets/images/message.png'
+};
+
+const Map<String, dynamic> ColorTheme_space = {
+  'themeName': 'Space',
+  'colors': [
+    Color(0xff51608C), 
+    Color(0xff7E94D9), 
+    Color(0xff8C919F), 
+    Color(0xffBFC5D9), 
+    Color(0xff343D59)
+  ],
+  'appTitleColor': Color(0xffE0E8FF),
+  'appTitleBackgroundColor': Color(0xff56597A),
+  'FABColor': Color(0xffF7D06F),
+  'appBarImagePath': 'assets/images/space.png'
+};
+
+const Map<String, dynamic> ColorTheme_sunset = {
+  'themeName': 'Sunset',
+  'colors': [
+    Color(0xff49669C), 
+    Color(0xffF2C12E), 
+    Color(0xffF26716), 
+    Color(0xffD61C04), 
+    Color(0xff332418)
+  ],
+  'appTitleColor': Color(0xffFFFED9),
+  'appTitleBackgroundColor': Color(0xff332418),
+  'FABColor': Color(0xff49669C),
+  'appBarImagePath': 'assets/images/sunset.png'
+};
+
+const int defaultFontSize = 24;
+const Map<String, int> FontSizes = {
+  'Extra small': 16,
+  'Small': 20,
+  'Medium': 24,
+  'Large': 28,
+  'Extra large': 32,
+};
 
 const assetPath = 'assets/sounds';
 List<AudioFile> voiceDataList = [
