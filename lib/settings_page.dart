@@ -27,7 +27,7 @@ class _SettingsPageState extends State<SettingsPage> {
           DropdownButton(
             value: _selectedTheme,
             hint: Text('Select your theme'),
-            items: Constants.ThemeList.map((theme) {
+            items: Constants.ThemeList.values.map((theme) {
               return DropdownMenuItem(
                 child: Container(
                   child: Text(theme['themeName']),

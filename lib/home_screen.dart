@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'dart:io';
@@ -6,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:pay_attention_to_me/util/commonFileFunc.dart';
+import 'package:pay_attention_to_me/util/settingsManager.dart';
 import 'package:pay_attention_to_me/widgets/recorder.dart';
 import 'package:reorderables/reorderables.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
@@ -13,8 +16,16 @@ import 'constants.dart' as Constants;
 import 'models/audiofile.dart';
 import './settings_page.dart';
 import './widgets/edit_color_dialog.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 
 class HomeScreen extends StatefulWidget {
+  final dynamic initialTheme;
+  final double initialItemFontSize;
+  final List<AudioFile> initialAudioFileList;
+  final int initialLastColorIndex;
+
+  const HomeScreen({this.initialTheme, this.initialItemFontSize, this.initialAudioFileList, this.initialLastColorIndex});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -23,13 +34,13 @@ class _HomeScreenState extends State<HomeScreen> {
   FlutterSound flutterSound;
   // AssetsAudioPlayer assetsAudioPlayer;
   // List<FileSystemEntity> _audioFileList = new List();
-  List<AudioFile> _audioFileList = new List();
+  List<AudioFile> _audioFileList;
   int _currentPageIndex = 0;
   PageController _pageController;
   TextEditingController _fileNameTextFieldController;
   final SlidableController _slidableController = SlidableController();
-  var _theme = Constants.ColorTheme_sunset;
-  int _itemFontSize = Constants.defaultFontSize;
+  var _theme;
+  double _itemFontSize;
   int _lastColorIndex = 0;
 
   @override
@@ -39,9 +50,10 @@ class _HomeScreenState extends State<HomeScreen> {
     _pageController = PageController();
     _fileNameTextFieldController = TextEditingController();
 
-    _fileNameTextFieldController.addListener(isFileNameEditTextFieldEmpty);
-
-    _getListOfFiles();
+    _theme = widget.initialTheme;
+    _itemFontSize = widget.initialItemFontSize;
+    _lastColorIndex = widget.initialLastColorIndex;
+    _audioFileList = widget.initialAudioFileList;
   }
 
   @override
@@ -52,10 +64,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _pageController.dispose();
     _fileNameTextFieldController.dispose();
     super.dispose();
-  }
-
-  void isFileNameEditTextFieldEmpty() {
-
   }
 
   Widget _getVoiceItem(BuildContext context, int index) {
@@ -100,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       audioFile.title,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: _itemFontSize.toDouble(),
+                        fontSize: _itemFontSize,
                         color: Colors.white,
                         fontFamily: 'Quicksand',
                         fontWeight: FontWeight.w900,
@@ -117,6 +125,28 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       actions: <Widget>[
+        Container(
+          margin: EdgeInsets.only(top: 6, left: 6),
+          child: SlideAction(
+            decoration: BoxDecoration(
+              color: Constants.editColor,
+              borderRadius: BorderRadius.circular(15)
+            ),
+            child: Icon(
+              MaterialIcons.share,
+              color: Colors.white,
+              size: 30,
+            ),
+            onTap: () async {
+              try {
+                final Uint8List bytes = File(audioFile.path).readAsBytesSync();
+                await Share.file(audioFile.title, path.basename(audioFile.path), bytes.buffer.asUint8List(), '	audio/*', text: 'testing share');
+              } catch (err) {
+                return;
+              }
+            },
+          ),
+        ),
         Container(
           margin: EdgeInsets.only(top: 6, left: 6),
           child: SlideAction(
@@ -240,32 +270,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<void> _getListOfFiles() async {
-    Directory docDir = await getApplicationDocumentsDirectory();
-    int count = 0;
-    setState(() {
-      try {
-        _audioFileList = Directory('${docDir.path}/audio')
-            .listSync()
-            .map((file) {
-              int colorIndex = count++ % _theme['colors'].length;
-              _lastColorIndex = colorIndex;
-              return new AudioFile(
-                uri: file.uri.toString(),
-                path: file.path,
-                title: path.basenameWithoutExtension(file.path),
-                color: _theme['colors'][colorIndex],
-                colorIndex: colorIndex,
-              );
-            })
-            .toList();
-        // _audioFileList = Directory('${docDir.path}/audio').listSync();
-      } on FileSystemException {
-        new Directory('${docDir.path}/audio').createSync();
-      }
-    });
-  }
-
   void _onReorder(int oldIndex, int newIndex) {
     if (oldIndex == newIndex) return;
     setState(() {
@@ -341,7 +345,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SettingsPage(
-              onSettingsSave: (var newTheme, int newFontSize) {
+              onSettingsSave: (var newTheme, double newFontSize) {
+                saveSettings(themeName: newTheme['themeName'], fontSize: newFontSize);
                 setState(() {
                   _pageController.animateToPage(0,
           duration: Duration(milliseconds: 300), curve: Curves.ease);

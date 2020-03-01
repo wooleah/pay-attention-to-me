@@ -7,14 +7,15 @@ const Color correctColor = Color(0xff78BF45);
 const Color wrongColor = Color(0xffF26666);
 const Color editColor = Colors.black;
 
-const ThemeList = [
-  ColorTheme_cat,
-  ColorTheme_dog,
-  ColorTheme_message,
-  ColorTheme_space,
-  ColorTheme_sunset,
-];
+const Map<dynamic, Map> ThemeList = {
+  'Cat': ColorTheme_cat,
+  'Dog': ColorTheme_dog,
+  'Message': ColorTheme_message,
+  'Space': ColorTheme_space,
+  'Sunset': ColorTheme_sunset,
+};
 
+const String defaultThemeName = 'Cat';
 const Map<String, dynamic> ColorTheme_dog = {
   'themeName': 'Dog',
   'colors': [
@@ -90,8 +91,8 @@ const Map<String, dynamic> ColorTheme_sunset = {
   'appBarImagePath': 'assets/images/sunset.png'
 };
 
-const int defaultFontSize = 24;
-const Map<String, int> FontSizes = {
+const double defaultFontSize = 24;
+const Map<String, double> FontSizes = {
   'Extra small': 16,
   'Small': 20,
   'Medium': 24,
