@@ -69,6 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _getVoiceItem(BuildContext context, int index) {
     AudioFile audioFile = _audioFileList[index];
     File file = File(audioFile.path);
+    String backgroundPattern = _theme['backgroundPattern'][index];
 
     return Slidable(
       key: Key(audioFile.uri),
@@ -82,6 +83,10 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Container(
             decoration: BoxDecoration(
               color: audioFile.color,
+              image: backgroundPattern != null ? DecorationImage(
+                image: AssetImage(backgroundPattern),
+                fit: BoxFit.fitWidth,
+              ) : null,
               borderRadius: BorderRadius.circular(15),
               // boxShadow: [
               //   BoxShadow(

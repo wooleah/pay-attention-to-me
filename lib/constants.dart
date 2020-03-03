@@ -40,6 +40,9 @@ const Map<String, dynamic> ColorTheme_cat = {
     Color(0xff61808C), 
     Color(0xff403B38),
   ],
+  'backgroundPattern': {
+    0: 'assets/images/polkadots.png',
+  },
   'appTitleColor': Color(0xff195275),
   'appTitleBackgroundColor': Colors.white,
   'FABColor': Color(0xffEB7E44),
