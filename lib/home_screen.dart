@@ -9,6 +9,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:pay_attention_to_me/util/commonFileFunc.dart';
 import 'package:pay_attention_to_me/util/settingsManager.dart';
+import 'package:pay_attention_to_me/widgets/file_name_dialog.dart';
 import 'package:pay_attention_to_me/widgets/recorder.dart';
 import 'package:reorderables/reorderables.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
@@ -37,7 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
   List<AudioFile> _audioFileList;
   int _currentPageIndex = 0;
   PageController _pageController;
-  TextEditingController _fileNameTextFieldController;
   final SlidableController _slidableController = SlidableController();
   var _theme;
   double _itemFontSize;
@@ -48,7 +48,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     flutterSound = FlutterSound();
     _pageController = PageController();
-    _fileNameTextFieldController = TextEditingController();
 
     _theme = widget.initialTheme;
     _itemFontSize = widget.initialItemFontSize;
@@ -62,14 +61,12 @@ class _HomeScreenState extends State<HomeScreen> {
     //   flutterSound.stopPlayer();
     // }
     _pageController.dispose();
-    _fileNameTextFieldController.dispose();
     super.dispose();
   }
 
   Widget _getVoiceItem(BuildContext context, int index) {
     AudioFile audioFile = _audioFileList[index];
     File file = File(audioFile.path);
-    String backgroundPattern = _theme['backgroundPattern'][index];
 
     return Slidable(
       key: Key(audioFile.uri),
@@ -83,9 +80,10 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Container(
             decoration: BoxDecoration(
               color: audioFile.color,
-              image: backgroundPattern != null ? DecorationImage(
-                image: AssetImage(backgroundPattern),
-                fit: BoxFit.fitWidth,
+              image: audioFile.background != '' ? DecorationImage(
+                image: AssetImage(audioFile.background),
+                fit: BoxFit.fill,
+                colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.7), BlendMode.srcIn)
               ) : null,
               borderRadius: BorderRadius.circular(15),
               // boxShadow: [
@@ -134,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
           margin: EdgeInsets.only(top: 6, left: 6),
           child: SlideAction(
             decoration: BoxDecoration(
-              color: Constants.editColor,
+              color: Constants.shareColor,
               borderRadius: BorderRadius.circular(15)
             ),
             child: Icon(
@@ -169,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
               if (newColorIndex == null) return;
               
               setState(() {
-                audioFile.update(color: _theme['colors'][newColorIndex], colorIndex: newColorIndex);
+                audioFile.update(color: _theme['themeSet'][newColorIndex]['color'], colorIndex: newColorIndex);
               });
             },
           ),
@@ -189,8 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
               size: 30,
             ),
             onTap: () async {
-              String newFileName =
-                  await _showFileNameDialog(context, audioFile.title);
+              String newFileName = await _showFileNameDialog(context, audioFile.title);
               if (newFileName == null) {
                 return;
               }
@@ -232,31 +229,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<String> _showFileNameDialog(
     BuildContext context, String currentName) async {
-    _fileNameTextFieldController.text = currentName;
-
     return showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text('Name of your file?'),
-          content: TextField(controller: _fileNameTextFieldController),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: Text('OK'),
-              onPressed: () {
-                if (_fileNameTextFieldController.text == currentName || _fileNameTextFieldController.text.isEmpty) return;
-                Navigator.of(context).pop(_fileNameTextFieldController.text);
-              },
-              disabledColor: Colors.white10,
-            ),
-          ],
-        );
+        return FileNameDialog(currentName: currentName);
       },
     );
   }
@@ -357,7 +333,12 @@ class _HomeScreenState extends State<HomeScreen> {
           duration: Duration(milliseconds: 300), curve: Curves.ease);
                   if (newTheme != null) {
                     _theme = newTheme;
-                    _audioFileList.forEach((audioFile) => audioFile.update(color: newTheme['colors'][audioFile.colorIndex]));
+                    _audioFileList.forEach(
+                      (audioFile) => audioFile.update(
+                        color: newTheme['themeSet'][audioFile.colorIndex]['color'],
+                        background: newTheme['themeSet'][audioFile.colorIndex]['background'],
+                      )
+                    );
                   }
                   if (newFontSize != null) {
                     _itemFontSize = newFontSize;
@@ -403,7 +384,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Recorder(
                   onFileSaveCb: (File file) {
                     ++_lastColorIndex;
-                    if (_lastColorIndex >= _theme['colors'].length) {
+                    if (_lastColorIndex >= _theme['themeSet'].length) {
                       _lastColorIndex = 0;
                     }
                     setState(() {
@@ -411,7 +392,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         uri: file.uri.toString(),
                         path: file.path,
                         title: path.basenameWithoutExtension(file.path),
-                        color: _theme['colors'][_lastColorIndex],
+                        color: _theme['themeSet'][_lastColorIndex]['color'],
+                        background: _theme['themeSet'][_lastColorIndex]['background'],
                         colorIndex: _lastColorIndex,
                       ));
                     });

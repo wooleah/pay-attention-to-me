@@ -6,10 +6,11 @@ class AudioFile {
   String title;
   Color color;
   int colorIndex;
+  String background;
 
-  AudioFile({this.path, this.uri, this.title, this.color, this.colorIndex});
+  AudioFile({this.path, this.uri, this.title, this.color, this.colorIndex, this.background});
 
-  update({String newPath, String newUri, String newTitle, Color color, int colorIndex}) {
+  update({String newPath, String newUri, String newTitle, Color color, int colorIndex, String background}) {
     if (newPath != null) {
       this.path = newPath;
     }
@@ -21,6 +22,9 @@ class AudioFile {
     }
     if (color != null) {
       this.color = color;
+    }
+    if (background != null) {
+      this.background = background;
     }
     if (colorIndex != null) {
       this.colorIndex = colorIndex;

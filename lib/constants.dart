@@ -5,7 +5,8 @@ import 'models/audiofile.dart';
 
 const Color correctColor = Color(0xff78BF45);
 const Color wrongColor = Color(0xffF26666);
-const Color editColor = Colors.black;
+const Color editColor = Colors.brown;
+const Color shareColor = Colors.grey;
 
 const Map<dynamic, Map> ThemeList = {
   'Cat': ColorTheme_cat,
@@ -16,6 +17,7 @@ const Map<dynamic, Map> ThemeList = {
 };
 
 const String defaultThemeName = 'Cat';
+
 const Map<String, dynamic> ColorTheme_dog = {
   'themeName': 'Dog',
   'colors': [
@@ -24,6 +26,14 @@ const Map<String, dynamic> ColorTheme_dog = {
     Color(0xffEDC6B2), 
     Color(0xffBF7C63), 
     Color(0xffA05D22), 
+  ],
+  'boxFit': 'fill',
+  'themeSet': [
+    {'color': Color(0xffD97941), 'background': 'assets/images/paws.png'}, 
+    {'color': Color(0xff6A9988), 'background': 'assets/images/polkadots.png'}, 
+    {'color': Color(0xffEDC6B2), 'background': 'assets/images/cattail.png'}, 
+    {'color': Color(0xffBF7C63), 'background': 'assets/images/polkadots.png'}, 
+    {'color': Color(0xffA05D22), 'background': 'assets/images/tunacat.png'},
   ],
   'appTitleColor': Color(0xff4F2C18),
   'appTitleBackgroundColor': Colors.white,
@@ -40,9 +50,14 @@ const Map<String, dynamic> ColorTheme_cat = {
     Color(0xff61808C), 
     Color(0xff403B38),
   ],
-  'backgroundPattern': {
-    0: 'assets/images/polkadots.png',
-  },
+  'boxFit': 'fill',
+  'themeSet': [
+    {'color': Color(0xff9CC1D9), 'background': 'assets/images/paws.png'}, 
+    {'color': Color(0xffA7CFF2), 'background': 'assets/images/polkadots.png'}, 
+    {'color': Color(0xff8DA6A1), 'background': 'assets/images/cattail.png'}, 
+    {'color': Color(0xff61808C), 'background': 'assets/images/polkadots.png'}, 
+    {'color': Color(0xff403B38), 'background': 'assets/images/tunacat.png'},
+  ],
   'appTitleColor': Color(0xff195275),
   'appTitleBackgroundColor': Colors.white,
   'FABColor': Color(0xffEB7E44),
@@ -57,6 +72,14 @@ const Map<String, dynamic> ColorTheme_message = {
     Color(0xff25D995), 
     Color(0xffFFE000), 
     Color(0xffF00801)
+  ],
+  'boxFit': 'fill',
+  'themeSet': [
+    {'color': Color(0xff01151A), 'background': ''}, 
+    {'color': Color(0xff92DEFF), 'background': ''}, 
+    {'color': Color(0xff25D995), 'background': ''}, 
+    {'color': Color(0xffFFE000), 'background': ''}, 
+    {'color': Color(0xffF00801), 'background': ''},
   ],
   'appTitleColor': Color(0xff01151A),
   'appTitleBackgroundColor': Colors.white,
@@ -73,6 +96,14 @@ const Map<String, dynamic> ColorTheme_space = {
     Color(0xffBFC5D9), 
     Color(0xff343D59)
   ],
+  'boxFit': 'fill',
+  'themeSet': [
+    {'color': Color(0xff51608C), 'background': 'assets/images/ufos.png'}, 
+    {'color': Color(0xff7E94D9), 'background': 'assets/images/stars.png'}, 
+    {'color': Color(0xff8C919F), 'background': 'assets/images/earth.png'}, 
+    {'color': Color(0xffBFC5D9), 'background': 'assets/images/stars.png'}, 
+    {'color': Color(0xff343D59), 'background': 'assets/images/astronaut.png'},
+  ],
   'appTitleColor': Color(0xffE0E8FF),
   'appTitleBackgroundColor': Color(0xff56597A),
   'FABColor': Color(0xffF7D06F),
@@ -87,6 +118,14 @@ const Map<String, dynamic> ColorTheme_sunset = {
     Color(0xffF26716), 
     Color(0xffD61C04), 
     Color(0xff332418)
+  ],
+  'boxFit': 'fill',
+  'themeSet': [
+    {'color': Color(0xff49669C), 'background': 'assets/images/tent.png'}, 
+    {'color': Color(0xffF2C12E), 'background': 'assets/images/clouds.png'}, 
+    {'color': Color(0xffF26716), 'background': 'assets/images/tent.png'}, 
+    {'color': Color(0xffD61C04), 'background': 'assets/images/clouds.png'}, 
+    {'color': Color(0xff332418), 'background': 'assets/images/tent.png'},
   ],
   'appTitleColor': Color(0xffFFFED9),
   'appTitleBackgroundColor': Color(0xff332418),

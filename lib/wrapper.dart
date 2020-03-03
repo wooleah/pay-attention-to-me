@@ -33,13 +33,14 @@ class _WrapperState extends State<Wrapper> {
       _audioFileList = Directory('${docDir.path}/audio')
           .listSync()
           .map((file) {
-            int colorIndex = count++ % _theme['colors'].length;
+            int colorIndex = count++ % _theme['themeSet'].length;
             _lastColorIndex = colorIndex;
             return new AudioFile(
               uri: file.uri.toString(),
               path: file.path,
               title: path.basenameWithoutExtension(file.path),
-              color: _theme['colors'][colorIndex],
+              color: _theme['themeSet'][colorIndex]['color'],
+              background: _theme['themeSet'][colorIndex]['background'],
               colorIndex: colorIndex,
             );
           })
