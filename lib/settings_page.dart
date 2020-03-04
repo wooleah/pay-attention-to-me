@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'constants.dart' as Constants;
 
 class SettingsPage extends StatefulWidget {
+  final currentTheme;
   final Function onSettingsSave;
 
-  const SettingsPage({this.onSettingsSave});
+  const SettingsPage({this.currentTheme, this.onSettingsSave});
 
   @override
   _SettingsPageState createState() => _SettingsPageState();
@@ -20,7 +21,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xff7B93B3),
+        color: widget.currentTheme['settingsPageColor'],
         // image: DecorationImage(image: AssetImage('assets/images/stripes.png'), fit: BoxFit.fill)
       ),
       padding: const EdgeInsets.symmetric(vertical: 150, horizontal: 70),

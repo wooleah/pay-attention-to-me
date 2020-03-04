@@ -12,7 +12,7 @@ import 'package:pay_attention_to_me/util/settingsManager.dart';
 import 'package:pay_attention_to_me/widgets/file_name_dialog.dart';
 import 'package:pay_attention_to_me/widgets/recorder.dart';
 import 'package:reorderables/reorderables.dart';
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'constants.dart' as Constants;
 import 'models/audiofile.dart';
 import './settings_page.dart';
@@ -326,6 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SettingsPage(
+              currentTheme: _theme,
               onSettingsSave: (var newTheme, double newFontSize) {
                 saveSettings(themeName: newTheme['themeName'], fontSize: newFontSize);
                 setState(() {
@@ -349,62 +350,71 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavyBar(
-        itemCornerRadius: 15,
-        selectedIndex: _currentPageIndex,
-        showElevation: true, // use this to remove appBar's elevation
-        onItemSelected: (index) => setState(() {
+      bottomNavigationBar: SizedBox(
+        height: 60,
+        child: BubbleBottomBar(
+          opacity: .2,
+          currentIndex: _currentPageIndex,
+          onTap: (index) => setState(() {
             _currentPageIndex = index;
-            _pageController.animateToPage(index,
-          duration: Duration(milliseconds: 300), curve: Curves.ease);
-        }),
-        items: [
-          BottomNavyBarItem(
-            icon: Icon(Icons.home),
-            title: Text('Home'),
-            activeColor: Colors.red,
-          ),
-          BottomNavyBarItem(
-              icon: Icon(Icons.settings),
-              title: Text('Settings'),
-              activeColor: Colors.blue
-          ),
-        ],
+            _pageController.animateToPage(index, duration: Duration(milliseconds: 300), curve: Curves.ease);
+          }),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+          elevation: 15,
+          fabLocation: BubbleBottomBarFabLocation.end, //new
+          hasNotch: true, //new
+          hasInk: true, //new, gives a cute ink effect
+          inkColor: Colors.black12, //optional, uses theme color if not specified
+          items: <BubbleBottomBarItem>[
+            BubbleBottomBarItem(
+              backgroundColor: Constants.wrongColor, 
+              icon: Icon(Icons.home, color: Colors.black,), 
+              activeIcon: Icon(Icons.home, color: Constants.wrongColor,), 
+              title: Text("Home"),
+            ),
+            BubbleBottomBarItem(
+              backgroundColor: Constants.correctColor, 
+              icon: Icon(Icons.settings, color: Colors.black,), 
+              activeIcon: Icon(Icons.settings, color: Constants.correctColor,), 
+              title: Text("Settings"),
+            )
+          ],
+        ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: _currentPageIndex == 0 ? FloatingActionButton(
-        elevation: 0,
-          child: Icon(Icons.add),
-          backgroundColor: _theme['FABColor'],
-          foregroundColor: Colors.white,
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              builder: (context) {
-                return Recorder(
-                  onFileSaveCb: (File file) {
-                    ++_lastColorIndex;
-                    if (_lastColorIndex >= _theme['themeSet'].length) {
-                      _lastColorIndex = 0;
-                    }
-                    setState(() {
-                      _audioFileList.add(new AudioFile(
-                        uri: file.uri.toString(),
-                        path: file.path,
-                        title: path.basenameWithoutExtension(file.path),
-                        color: _theme['themeSet'][_lastColorIndex]['color'],
-                        background: _theme['themeSet'][_lastColorIndex]['background'],
-                        colorIndex: _lastColorIndex,
-                      ));
-                    });
-                    _scrollController.animateTo(_scrollController.position.maxScrollExtent, curve: Curves.ease, duration: const Duration(milliseconds: 700));
-                  },
-                  theme: _theme,
-                );
-              },
-            );
-          },
-        ) : null,
+        // elevation: 0,
+        child: Icon(Icons.add),
+        backgroundColor: _theme['FABColor'],
+        foregroundColor: Colors.white,
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return Recorder(
+                onFileSaveCb: (File file) {
+                  ++_lastColorIndex;
+                  if (_lastColorIndex >= _theme['themeSet'].length) {
+                    _lastColorIndex = 0;
+                  }
+                  setState(() {
+                    _audioFileList.add(new AudioFile(
+                      uri: file.uri.toString(),
+                      path: file.path,
+                      title: path.basenameWithoutExtension(file.path),
+                      color: _theme['themeSet'][_lastColorIndex]['color'],
+                      background: _theme['themeSet'][_lastColorIndex]['background'],
+                      colorIndex: _lastColorIndex,
+                    ));
+                  });
+                  _scrollController.animateTo(_scrollController.position.maxScrollExtent, curve: Curves.ease, duration: const Duration(milliseconds: 700));
+                },
+                theme: _theme,
+              );
+            },
+          );
+        },
+      ) : null,
     );
   }
 }

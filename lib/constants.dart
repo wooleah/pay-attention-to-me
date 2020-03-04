@@ -29,16 +29,17 @@ const Map<String, dynamic> ColorTheme_dog = {
   ],
   'boxFit': 'fill',
   'themeSet': [
-    {'color': Color(0xffD97941), 'background': 'assets/images/paws.png'}, 
-    {'color': Color(0xff6A9988), 'background': 'assets/images/polkadots.png'}, 
-    {'color': Color(0xffEDC6B2), 'background': 'assets/images/cattail.png'}, 
-    {'color': Color(0xffBF7C63), 'background': 'assets/images/polkadots.png'}, 
-    {'color': Color(0xffA05D22), 'background': 'assets/images/tunacat.png'},
+    {'color': Color(0xffD97941), 'background': 'assets/images/bones.png'}, 
+    {'color': Color(0xff6A9988), 'background': 'assets/images/xs.png'}, 
+    {'color': Color(0xffEDC6B2), 'background': 'assets/images/paws.png'}, 
+    {'color': Color(0xffBF7C63), 'background': 'assets/images/xs.png'}, 
+    {'color': Color(0xffA05D22), 'background': 'assets/images/doghouse.png'},
   ],
   'appTitleColor': Color(0xff4F2C18),
   'appTitleBackgroundColor': Colors.white,
   'FABColor': Color(0xffD97941),
-  'appBarImagePath': 'assets/images/dog.png'
+  'appBarImagePath': 'assets/images/dog.png',
+  'settingsPageColor': Colors.white,
 };
 
 const Map<String, dynamic> ColorTheme_cat = {
@@ -61,7 +62,8 @@ const Map<String, dynamic> ColorTheme_cat = {
   'appTitleColor': Color(0xff195275),
   'appTitleBackgroundColor': Colors.white,
   'FABColor': Color(0xffEB7E44),
-  'appBarImagePath': 'assets/images/cat.png'
+  'appBarImagePath': 'assets/images/cat.png',
+  'settingsPageColor': Colors.white,
 };
 
 const Map<String, dynamic> ColorTheme_message = {
@@ -84,7 +86,8 @@ const Map<String, dynamic> ColorTheme_message = {
   'appTitleColor': Color(0xff01151A),
   'appTitleBackgroundColor': Colors.white,
   'FABColor': Color(0xff01151A),
-  'appBarImagePath': 'assets/images/message.png'
+  'appBarImagePath': 'assets/images/message.png',
+  'settingsPageColor': Colors.white,
 };
 
 const Map<String, dynamic> ColorTheme_space = {
@@ -107,7 +110,8 @@ const Map<String, dynamic> ColorTheme_space = {
   'appTitleColor': Color(0xffE0E8FF),
   'appTitleBackgroundColor': Color(0xff56597A),
   'FABColor': Color(0xffF7D06F),
-  'appBarImagePath': 'assets/images/space.png'
+  'appBarImagePath': 'assets/images/space.png',
+  'settingsPageColor': Color(0xff56597A),
 };
 
 const Map<String, dynamic> ColorTheme_sunset = {
@@ -123,14 +127,15 @@ const Map<String, dynamic> ColorTheme_sunset = {
   'themeSet': [
     {'color': Color(0xff49669C), 'background': 'assets/images/tent.png'}, 
     {'color': Color(0xffF2C12E), 'background': 'assets/images/clouds.png'}, 
-    {'color': Color(0xffF26716), 'background': 'assets/images/tent.png'}, 
+    {'color': Color(0xffF26716), 'background': 'assets/images/cacti.png'}, 
     {'color': Color(0xffD61C04), 'background': 'assets/images/clouds.png'}, 
-    {'color': Color(0xff332418), 'background': 'assets/images/tent.png'},
+    {'color': Color(0xff332418), 'background': 'assets/images/mountains.png'},
   ],
   'appTitleColor': Color(0xffFFFED9),
   'appTitleBackgroundColor': Color(0xff332418),
   'FABColor': Color(0xff49669C),
-  'appBarImagePath': 'assets/images/sunset.png'
+  'appBarImagePath': 'assets/images/sunset.png',
+  'settingsPageColor': Color(0xff332418),
 };
 
 const double defaultFontSize = 24;
