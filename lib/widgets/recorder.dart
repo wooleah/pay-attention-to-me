@@ -5,7 +5,8 @@ import 'package:intl/intl.dart';
 
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pay_attention_to_me/util/commonFileFunc.dart';
+import 'package:heyListen/models/customTheme.dart';
+import 'package:heyListen/util/commonFileFunc.dart';
 
 enum RecorderState {
   RECORD_READY,
@@ -18,7 +19,7 @@ enum RecorderState {
 
 class Recorder extends StatefulWidget {
   final Function onFileSaveCb;
-  final theme;
+  final CustomTheme theme;
 
   const Recorder({this.onFileSaveCb, this.theme});
 
@@ -61,7 +62,7 @@ class _RecorderState extends State<Recorder> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: widget.theme['FABColor'],
+      color: widget.theme.fabColor,
       height: 250,
       alignment: Alignment.center,
       child: Column(
@@ -110,7 +111,8 @@ class _RecorderState extends State<Recorder> {
                         File file = File(_recordedFilePath);
                         Directory docDir =
                             await getApplicationDocumentsDirectory();
-                        File newFile = await moveFile(file, '${docDir.path}/audio', '$text.aac');
+                        File newFile = await moveFile(
+                            file, '${docDir.path}/audio', '$text.aac');
                         widget.onFileSaveCb(newFile);
                         Navigator.of(context).pop();
                       },
@@ -118,7 +120,8 @@ class _RecorderState extends State<Recorder> {
                   'Save',
                   style: TextStyle(
                     fontSize: 20,
-                    color: _isSaveButtonDisabled ? Colors.white24 : Colors.white,
+                    color:
+                        _isSaveButtonDisabled ? Colors.white24 : Colors.white,
                   ),
                 ),
               ),
@@ -270,20 +273,34 @@ class _RecorderState extends State<Recorder> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Name of your file?'),
+          title: Text(
+            'Name of your file?',
+            style: TextStyle(),
+          ),
           content: TextField(
             controller: _fileNameTextFieldController,
-            decoration: InputDecoration(hintText: 'My file name'),
+            decoration: InputDecoration(
+                hintText: 'My file name', hintStyle: TextStyle()),
           ),
           actions: <Widget>[
             FlatButton(
-              child: Text('Cancel'),
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
-              child: Text('OK'),
+              child: Text(
+                'OK',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               onPressed: () {
                 if (_fileNameTextFieldController.text.isEmpty) return;
                 Navigator.of(context).pop(_fileNameTextFieldController.text);

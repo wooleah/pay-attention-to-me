@@ -22,11 +22,16 @@ class _EditColorDialogState extends State<EditColorDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Change the color'),
+      title: Text(
+        'Change the color',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          for(var i = 0; i < widget.colorList.length; ++i)
+          for (var i = 0; i < widget.colorList.length; ++i)
             RadioListTile<int>(
               value: i,
               groupValue: _selectedColorIndex,
@@ -36,23 +41,37 @@ class _EditColorDialogState extends State<EditColorDialog> {
                 color: widget.colorList[i],
               ),
               onChanged: (int colorIndex) {
-                setState(() { _selectedColorIndex = colorIndex; });
+                setState(() {
+                  _selectedColorIndex = colorIndex;
+                });
               },
             )
         ],
       ),
       actions: <Widget>[
         FlatButton(
-          child: Text('Cancel'),
+          child: Text(
+            'Cancel',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         FlatButton(
-          child: Text('Save'),
-          onPressed: _selectedColorIndex != null ? () {
-            Navigator.of(context).pop(_selectedColorIndex);
-          } : null,
+          child: Text(
+            'Save',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          onPressed: _selectedColorIndex != null
+              ? () {
+                  Navigator.of(context).pop(_selectedColorIndex);
+                }
+              : null,
           disabledColor: Colors.white10,
         ),
       ],

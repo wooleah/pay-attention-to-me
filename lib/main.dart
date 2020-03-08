@@ -8,6 +8,9 @@ class RootApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Wrapper(),
+      theme: ThemeData(
+        fontFamily: 'Quicksand',
+      ),
     );
   }
 }

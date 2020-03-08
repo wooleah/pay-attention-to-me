@@ -3,7 +3,8 @@ import 'package:path/path.dart' as path;
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pay_attention_to_me/util/settingsManager.dart';
+import 'package:heyListen/models/customTheme.dart';
+import 'package:heyListen/util/settingsManager.dart';
 import 'home_screen.dart';
 import 'models/audiofile.dart';
 import 'constants.dart' as Constants;
@@ -14,7 +15,7 @@ class Wrapper extends StatefulWidget {
 }
 
 class _WrapperState extends State<Wrapper> {
-  var _theme;
+  CustomTheme _theme;
   double _itemFontSize;
   List<AudioFile> _audioFileList = [];
   int _lastColorIndex = 0;
@@ -30,21 +31,19 @@ class _WrapperState extends State<Wrapper> {
     Directory docDir = await getApplicationDocumentsDirectory();
     int count = 0;
     try {
-      _audioFileList = Directory('${docDir.path}/audio')
-          .listSync()
-          .map((file) {
-            int colorIndex = count++ % _theme['themeSet'].length;
-            _lastColorIndex = colorIndex;
-            return new AudioFile(
-              uri: file.uri.toString(),
-              path: file.path,
-              title: path.basenameWithoutExtension(file.path),
-              color: _theme['themeSet'][colorIndex]['color'],
-              background: _theme['themeSet'][colorIndex]['background'],
-              colorIndex: colorIndex,
-            );
-          })
-          .toList();
+      _audioFileList = Directory('${docDir.path}/audio').listSync().map((file) {
+        int colorIndex = count++ % _theme.themeSet.length;
+        _lastColorIndex = colorIndex;
+        Map<String, dynamic> selectedThemeSet = _theme.themeSet[colorIndex];
+        return new AudioFile(
+          uri: file.uri.toString(),
+          path: file.path,
+          title: path.basenameWithoutExtension(file.path),
+          color: selectedThemeSet['color'],
+          background: selectedThemeSet['background'],
+          colorIndex: colorIndex,
+        );
+      }).toList();
       // _audioFileList = Directory('${docDir.path}/audio').listSync();
     } on FileSystemException {
       new Directory('${docDir.path}/audio').createSync();
@@ -52,6 +51,7 @@ class _WrapperState extends State<Wrapper> {
   }
 
   Future<void> _init() async {
+    await addTutorialVoice();
     await _preparePrevSettings();
     await _getListOfFiles();
   }

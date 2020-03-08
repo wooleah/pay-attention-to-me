@@ -23,23 +23,39 @@ class _FileNameDialogState extends State<FileNameDialog> {
     _fileNameTextFieldController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Name of your file?'),
+      title: Text(
+        'Name of your file?',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
       content: TextField(controller: _fileNameTextFieldController),
       actions: <Widget>[
         FlatButton(
-          child: Text('Cancel'),
+          child: Text(
+            'Cancel',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         FlatButton(
-          child: Text('OK'),
+          child: Text(
+            'OK',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           onPressed: () {
-            if (_fileNameTextFieldController.text == widget.currentName || _fileNameTextFieldController.text.isEmpty) return;
+            if (_fileNameTextFieldController.text == widget.currentName ||
+                _fileNameTextFieldController.text.isEmpty) return;
             Navigator.of(context).pop(_fileNameTextFieldController.text);
           },
           disabledColor: Colors.white10,
