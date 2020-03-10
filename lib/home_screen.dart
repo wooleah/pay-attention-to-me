@@ -235,6 +235,10 @@ class _HomeScreenState extends State<HomeScreen> {
               setState(() {
                 _audioFileList.removeAt(index);
               });
+              _lastColorIndex--;
+              if (_lastColorIndex < 0) {
+                _lastColorIndex = _theme.themeSet.length - 1;
+              }
 
               // Update fileUriOrderList in sharedPref
               saveEncodedFileOrderList(_audioFileList);
@@ -472,6 +476,36 @@ class _HomeScreenState extends State<HomeScreen> {
                             _scrollController.position.maxScrollExtent,
                             curve: Curves.ease,
                             duration: const Duration(milliseconds: 700));
+                      },
+                      onFilesImportedCb: (List<File> files) {
+                        files.forEach((file) {
+                          ++_lastColorIndex;
+                          if (_lastColorIndex >= _theme.themeSet.length) {
+                            _lastColorIndex = 0;
+                          }
+
+                          Map<String, dynamic> selectedThemeSet =
+                              _theme.themeSet[_lastColorIndex];
+                          setState(() {
+                            _audioFileList.add(new AudioFile(
+                              uri: file.uri.toString(),
+                              path: file.path,
+                              title: path.basenameWithoutExtension(file.path),
+                              color: selectedThemeSet['color'],
+                              background: selectedThemeSet['background'],
+                              colorIndex: _lastColorIndex,
+                            ));
+                          });
+                        });
+
+                        // Update fileUriOrderList in sharedPref
+                        saveEncodedFileOrderList(_audioFileList);
+
+                        _scrollController.animateTo(
+                          _scrollController.position.maxScrollExtent,
+                          curve: Curves.ease,
+                          duration: const Duration(milliseconds: 700),
+                        );
                       },
                       theme: _theme,
                     );

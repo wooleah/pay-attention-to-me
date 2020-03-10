@@ -43,6 +43,8 @@
 	<false/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need permission to your microphone to record your voice</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>We need permission to import your audio files and play it</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>

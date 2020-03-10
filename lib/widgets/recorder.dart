@@ -1,10 +1,15 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'dart:async';
 import 'dart:io';
+import 'package:path/path.dart' as path;
 import 'package:intl/intl.dart';
 
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:heyListen/models/customTheme.dart';
 import 'package:heyListen/util/commonFileFunc.dart';
 
@@ -19,9 +24,10 @@ enum RecorderState {
 
 class Recorder extends StatefulWidget {
   final Function onFileSaveCb;
+  final Function onFilesImportedCb;
   final CustomTheme theme;
 
-  const Recorder({this.onFileSaveCb, this.theme});
+  const Recorder({this.onFileSaveCb, this.onFilesImportedCb, this.theme});
 
   @override
   _RecorderState createState() => _RecorderState();
@@ -64,10 +70,49 @@ class _RecorderState extends State<Recorder> {
     return Container(
       color: widget.theme.fabColor,
       height: 250,
+      padding: const EdgeInsets.only(top: 5, right: 10),
       alignment: Alignment.center,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Transform.rotate(
+                angle: pi,
+                child: IconButton(
+                  icon: Icon(
+                    Entypo.export,
+                    size: 30,
+                    color: Colors.white,
+                  ),
+                  onPressed: () async {
+                    List<File> importedFiles = await FilePicker.getMultiFile();
+                    if (importedFiles == null || importedFiles.length == 0) {
+                      return;
+                    }
+
+                    List<Future<File>> copiedFileFutureList = [];
+                    // File file = await FilePicker.getFile();
+
+                    Directory docDir = await getApplicationDocumentsDirectory();
+                    // Copy all of the files to the audio dir
+                    importedFiles.forEach((file) {
+                      String fileName =
+                          path.basenameWithoutExtension(file.path);
+                      copiedFileFutureList
+                          .add(file.copy('${docDir.path}/audio/$fileName.aac'));
+                    });
+                    // And wait till all of them resolves
+                    List<File> copiedFiles =
+                        await Future.wait(copiedFileFutureList);
+                    widget.onFilesImportedCb(copiedFiles);
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ],
+          ),
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
