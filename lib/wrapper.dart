@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:path/path.dart' as path;
 
@@ -31,20 +32,59 @@ class _WrapperState extends State<Wrapper> {
     Directory docDir = await getApplicationDocumentsDirectory();
     int count = 0;
     try {
-      _audioFileList = Directory('${docDir.path}/audio').listSync().map((file) {
-        int colorIndex = count++ % _theme.themeSet.length;
-        _lastColorIndex = colorIndex;
-        Map<String, dynamic> selectedThemeSet = _theme.themeSet[colorIndex];
-        return new AudioFile(
-          uri: file.uri.toString(),
-          path: file.path,
-          title: path.basenameWithoutExtension(file.path),
-          color: selectedThemeSet['color'],
-          background: selectedThemeSet['background'],
-          colorIndex: colorIndex,
-        );
-      }).toList();
-      // _audioFileList = Directory('${docDir.path}/audio').listSync();
+      var fileList = Directory('${docDir.path}/audio').listSync();
+
+      var encodedFileOrderList = await getEncodedFileOrderList();
+
+      // Re-make the audioFileList when sharedPref's encodedFileOrderList is empty or it doesn't match with actual fileList
+      if (encodedFileOrderList == null ||
+          encodedFileOrderList.length != fileList.length) {
+        _audioFileList = fileList.map((file) {
+          int colorIndex = count++ % _theme.themeSet.length;
+          _lastColorIndex = colorIndex;
+          Map<String, dynamic> selectedThemeSet = _theme.themeSet[colorIndex];
+          return new AudioFile(
+            uri: file.uri.toString(),
+            path: file.path,
+            title: path.basenameWithoutExtension(file.path),
+            color: selectedThemeSet['color'],
+            background: selectedThemeSet['background'],
+            colorIndex: colorIndex,
+          );
+        }).toList();
+
+        // save the list in sharedPref
+        await saveEncodedFileOrderList(_audioFileList);
+      } else {
+        var fileUriMap = {};
+        fileList.forEach((file) => fileUriMap[file.uri.toString()] = file);
+
+        // Make an empty List and fill them in order
+        var orderedFileList = List(fileList.length);
+        for (var i = 0; i < encodedFileOrderList.length; ++i) {
+          Map<String, dynamic> decoded = jsonDecode(encodedFileOrderList[i]);
+          orderedFileList[i] = {
+            'file': fileUriMap[decoded['uri']],
+            'colorIndex': decoded['colorIndex'],
+            'background': decoded['background'],
+          };
+        }
+
+        _audioFileList = orderedFileList.map((fileObj) {
+          count++;
+          _lastColorIndex = count % _theme.themeSet.length;
+          Map<String, dynamic> selectedThemeSet =
+              _theme.themeSet[fileObj['colorIndex']];
+          return new AudioFile(
+            uri: fileObj['file'].uri.toString(),
+            path: fileObj['file'].path,
+            title: path.basenameWithoutExtension(fileObj['file'].path),
+            color: selectedThemeSet['color'],
+            background: selectedThemeSet['background'],
+            colorIndex: fileObj['colorIndex'],
+          );
+        }).toList();
+      }
     } on FileSystemException {
       new Directory('${docDir.path}/audio').createSync();
     }

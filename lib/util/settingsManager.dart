@@ -1,11 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:heyListen/models/audiofile.dart';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:heyListen/util/commonFileFunc.dart';
 
+// Prepare initial voice
 Future<void> addTutorialVoice() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool gotTutorialFile = prefs.getBool('gotTutorialFile');
@@ -33,6 +36,7 @@ Future<void> addTutorialVoice() async {
   }
 }
 
+// Save and get settings
 Future<void> saveSettings({String themeName, double fontSize}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   if (themeName != null) {
@@ -49,4 +53,32 @@ Future<Map<String, dynamic>> getSettings() async {
     'themeName': prefs.getString('themeName'),
     'fontSize': prefs.getDouble('fontSize')
   };
+}
+
+// Save and get fileOrderList(list of audioFile uris)
+Future<void> saveEncodedFileOrderList(List<AudioFile> list) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  List<String> uriList;
+  if (list.length == 0) {
+    uriList = [];
+  } else {
+    uriList = list.map((AudioFile audioFile) {
+      return jsonEncode({
+        'uri': audioFile.uri,
+        'colorIndex': audioFile.colorIndex,
+        'background': audioFile.background,
+      });
+    }).toList();
+  }
+
+  await prefs.setStringList('encodedFileOrderList', uriList);
+}
+
+Future<List<String>> getEncodedFileOrderList() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  try {
+    return prefs.getStringList('encodedFileOrderList');
+  } catch (err) {
+    return null;
+  }
 }

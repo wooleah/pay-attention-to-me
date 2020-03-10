@@ -213,6 +213,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 _audioFileList[index]
                     .update(newTitle: newFileName, newPath: newFile.path);
               });
+
+              // Update fileUriOrderList in sharedPref
+              saveEncodedFileOrderList(_audioFileList);
             },
           ),
         ),
@@ -232,6 +235,9 @@ class _HomeScreenState extends State<HomeScreen> {
               setState(() {
                 _audioFileList.removeAt(index);
               });
+
+              // Update fileUriOrderList in sharedPref
+              saveEncodedFileOrderList(_audioFileList);
             },
           ),
         ),
@@ -270,6 +276,9 @@ class _HomeScreenState extends State<HomeScreen> {
       AudioFile removedAudioFile = _audioFileList.removeAt(oldIndex);
       _audioFileList.insert(newIndex, removedAudioFile);
     });
+
+    // Update fileUriOrderList in sharedPref
+    saveEncodedFileOrderList(_audioFileList);
   }
 
   Future<void> startPlayer(uri) async {
@@ -455,6 +464,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             colorIndex: _lastColorIndex,
                           ));
                         });
+
+                        // Update fileUriOrderList in sharedPref
+                        saveEncodedFileOrderList(_audioFileList);
+
                         _scrollController.animateTo(
                             _scrollController.position.maxScrollExtent,
                             curve: Curves.ease,
