@@ -3,6 +3,11 @@ library constants;
 import 'package:flutter/material.dart';
 import 'package:heyListen/models/customTheme.dart';
 
+// const String appName = 'Hey, Listen - Customizable Soundboard';
+const String ADMOB_ID = 'ca-app-pub-9868217644217042~5463981768';
+const String PROD_ADUNIT_ID = 'ca-app-pub-9868217644217042/7483640443';
+const String TEST_ADUNIT_ID = 'ca-app-pub-3940256099942544/1033173712';
+
 const String companyLogoWithNamePath = 'assets/images/lovebirdsWithLogo.png';
 const String companyLogoPath = 'assets/images/lovebirds.png';
 

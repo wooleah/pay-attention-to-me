@@ -13,6 +13,8 @@ import 'package:heyListen/widgets/file_name_dialog.dart';
 import 'package:heyListen/widgets/recorder.dart';
 import 'package:reorderables/reorderables.dart';
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
+import 'package:firebase_admob/firebase_admob.dart';
+
 import 'constants.dart' as Constants;
 import 'models/audiofile.dart';
 import './settings_page.dart';
@@ -46,6 +48,10 @@ class _HomeScreenState extends State<HomeScreen> {
   CustomTheme _theme;
   double _itemFontSize;
   int _lastColorIndex = 0;
+  bool isAdClickable = true;
+
+  InterstitialAd _myInterstitial;
+  MobileAdTargetingInfo _targetingInfo;
 
   @override
   void initState() {
@@ -57,6 +63,15 @@ class _HomeScreenState extends State<HomeScreen> {
     _itemFontSize = widget.initialItemFontSize;
     _lastColorIndex = widget.initialLastColorIndex;
     _audioFileList = widget.initialAudioFileList;
+
+    FirebaseAdMob.instance.initialize(appId: Constants.ADMOB_ID);
+    _targetingInfo = MobileAdTargetingInfo(
+      keywords: <String>['sound', 'play', 'fun', 'soundboard', 'record'],
+      // contentUrl: 'https://flutter.io',
+      childDirected: true,
+      testDevices: <String>[], // Android emulators are considered test devices
+    );
+    _myInterstitial = createInterstitialAd()..load();
   }
 
   @override
@@ -64,8 +79,22 @@ class _HomeScreenState extends State<HomeScreen> {
     // if (_recorderStatus == RecorderState.PLAYING) {
     //   flutterSound.stopPlayer();
     // }
-    _pageController.dispose();
+    _pageController?.dispose();
+    _myInterstitial?.dispose();
     super.dispose();
+  }
+
+  InterstitialAd createInterstitialAd() {
+    return InterstitialAd(
+      adUnitId: Constants.TEST_ADUNIT_ID,
+      targetingInfo: _targetingInfo,
+      listener: (MobileAdEvent event) {
+        if (event.toString() == 'MobileAdEvent.closed') {
+          isAdClickable = true;
+        }
+        // print("InterstitialAd event is $event");
+      },
+    );
   }
 
   Widget _getVoiceItem(BuildContext context, int index) {
@@ -142,8 +171,9 @@ class _HomeScreenState extends State<HomeScreen> {
           margin: EdgeInsets.only(top: 6, left: 6),
           child: SlideAction(
             decoration: BoxDecoration(
-                color: Constants.shareColor,
-                borderRadius: BorderRadius.circular(15)),
+              color: Constants.shareColor,
+              borderRadius: BorderRadius.circular(15),
+            ),
             child: Icon(
               MaterialIcons.share,
               color: Colors.white,
@@ -293,6 +323,12 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<void> stopPlayer() async {
+    try {
+      await flutterSound.stopPlayer();
+    } catch (err) {}
+  }
+
   @override
   Widget build(BuildContext context) {
     // Make sure there is a scroll controller attached to the scroll view that contains ReorderableSliverList.
@@ -322,19 +358,45 @@ class _HomeScreenState extends State<HomeScreen> {
                     elevation: 8,
                     expandedHeight: 210.0,
                     backgroundColor: _theme.appTitleBackgroundColor,
+                    actions: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          MaterialCommunityIcons.gift,
+                          color: _theme.appTitleColor,
+                        ),
+                        onPressed: () async {
+                          // Prevent ad multi-clicking
+                          if (isAdClickable == false) {
+                            return;
+                          }
+                          isAdClickable = false;
+
+                          // Stop audio
+                          stopPlayer();
+                          // Show ad
+                          _myInterstitial?.dispose();
+                          _myInterstitial = createInterstitialAd()
+                            ..load()
+                            ..show();
+                        },
+                      )
+                    ],
                     flexibleSpace: FlexibleSpaceBar(
                       title: Text(
                         'Hey, Listen to this',
                         style: TextStyle(
-                            // height: 0.4,
-                            color: _theme.appTitleColor,
-                            fontFamily: 'AmaticSC',
-                            fontSize: 36,
-                            fontWeight: FontWeight.w900),
+                          // height: 0.4,
+                          color: _theme.appTitleColor,
+                          fontFamily: 'AmaticSC',
+                          fontSize: 36,
+                          fontWeight: FontWeight.w900,
+                        ),
                       ),
                       centerTitle: true,
-                      background: Image.asset(_theme.appBarImagePath,
-                          fit: BoxFit.contain),
+                      background: Image.asset(
+                        _theme.appBarImagePath,
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                   ReorderableSliverList(
