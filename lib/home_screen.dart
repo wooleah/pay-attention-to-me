@@ -86,11 +86,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   InterstitialAd createInterstitialAd() {
     return InterstitialAd(
+      // adUnitId: Constants.PROD_ADUNIT_ID,
       adUnitId: Constants.TEST_ADUNIT_ID,
       targetingInfo: _targetingInfo,
       listener: (MobileAdEvent event) {
-        if (event.toString() == 'MobileAdEvent.closed') {
-          isAdClickable = true;
+        if (event == MobileAdEvent.closed ||
+            event == MobileAdEvent.failedToLoad) {
+          setState(() {
+            isAdClickable = true;
+          });
         }
         // print("InterstitialAd event is $event");
       },
@@ -364,21 +368,26 @@ class _HomeScreenState extends State<HomeScreen> {
                           MaterialCommunityIcons.gift,
                           color: _theme.appTitleColor,
                         ),
-                        onPressed: () async {
-                          // Prevent ad multi-clicking
-                          if (isAdClickable == false) {
-                            return;
-                          }
-                          isAdClickable = false;
+                        disabledColor: _theme.appTitleColor.withOpacity(0.3),
+                        onPressed: isAdClickable
+                            ? () async {
+                                // Prevent ad multi-clicking
+                                if (isAdClickable == false) {
+                                  return;
+                                }
+                                setState(() {
+                                  isAdClickable = false;
+                                });
 
-                          // Stop audio
-                          stopPlayer();
-                          // Show ad
-                          _myInterstitial?.dispose();
-                          _myInterstitial = createInterstitialAd()
-                            ..load()
-                            ..show();
-                        },
+                                // Stop audio
+                                stopPlayer();
+                                // Show ad
+                                _myInterstitial?.dispose();
+                                _myInterstitial = createInterstitialAd()
+                                  ..load()
+                                  ..show();
+                              }
+                            : null,
                       )
                     ],
                     flexibleSpace: FlexibleSpaceBar(

@@ -23,13 +23,20 @@ Future<void> addTutorialVoice() async {
         await rootBundle.load('assets/sounds/initial_voice2.mp3');
     var initialVoice3 =
         await rootBundle.load('assets/sounds/initial_voice3.mp3');
+    var initialVoice4 =
+        await rootBundle.load('assets/sounds/initial_voice4.mp3');
+    var initialVoice5 =
+        await rootBundle.load('assets/sounds/initial_voice5.mp3');
 
     String appDir = (await getApplicationDocumentsDirectory()).path;
     // Create audio directory
     String audioFileDirPath = (await Directory('$appDir/audio').create()).path;
-    await writeToFile(initialVoice1, '$audioFileDirPath/instruction1.mp3');
-    await writeToFile(initialVoice2, '$audioFileDirPath/instruction2.mp3');
-    await writeToFile(initialVoice3, '$audioFileDirPath/instruction3.mp3');
+    await writeToFile(initialVoice1, '$audioFileDirPath/Click me.mp3');
+    await writeToFile(initialVoice2, '$audioFileDirPath/Click me next.mp3');
+    await writeToFile(
+        initialVoice3, '$audioFileDirPath/Press me for 1 second!.mp3');
+    await writeToFile(initialVoice4, '$audioFileDirPath/Click me fourth.mp3');
+    await writeToFile(initialVoice5, '$audioFileDirPath/Click me last!.mp3');
     await prefs.setBool('gotTutorialFile', true);
   } catch (err) {
     print(err.toString());
