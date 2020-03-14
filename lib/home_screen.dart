@@ -31,11 +31,12 @@ class HomeScreen extends StatefulWidget {
   final List<AudioFile> initialAudioFileList;
   final int initialLastColorIndex;
 
-  const HomeScreen(
-      {this.initialTheme,
-      this.initialItemFontSize,
-      this.initialAudioFileList,
-      this.initialLastColorIndex});
+  const HomeScreen({
+    this.initialTheme,
+    this.initialItemFontSize,
+    this.initialAudioFileList,
+    this.initialLastColorIndex,
+  });
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -502,11 +503,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (context) {
                     return Recorder(
                       onFileSaveCb: (File file) {
-                        ++_lastColorIndex;
-                        if (_lastColorIndex >= _theme.themeSet.length) {
-                          _lastColorIndex = 0;
-                        }
-
                         Map<String, dynamic> selectedThemeSet =
                             _theme.themeSet[_lastColorIndex];
                         setState(() {
@@ -520,6 +516,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           ));
                         });
 
+                        _lastColorIndex++;
+                        if (_lastColorIndex >= _theme.themeSet.length) {
+                          _lastColorIndex = 0;
+                        }
+
                         // Update fileUriOrderList in sharedPref
                         saveEncodedFileOrderList(_audioFileList);
 
@@ -530,11 +531,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       onFilesImportedCb: (List<File> files) {
                         files.forEach((file) {
-                          ++_lastColorIndex;
-                          if (_lastColorIndex >= _theme.themeSet.length) {
-                            _lastColorIndex = 0;
-                          }
-
                           Map<String, dynamic> selectedThemeSet =
                               _theme.themeSet[_lastColorIndex];
                           setState(() {
@@ -547,6 +543,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               colorIndex: _lastColorIndex,
                             ));
                           });
+
+                          _lastColorIndex++;
+                          if (_lastColorIndex >= _theme.themeSet.length) {
+                            _lastColorIndex = 0;
+                          }
                         });
 
                         // Update fileUriOrderList in sharedPref
