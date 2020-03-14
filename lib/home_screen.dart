@@ -118,17 +118,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       actions: <Widget>[
         Container(
+          height: double.infinity,
           margin: EdgeInsets.only(top: 6, left: 6),
-          child: SlideAction(
-            decoration: BoxDecoration(
-              color: Constants.shareColor,
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Icon(
-              MaterialIcons.share,
-              color: Colors.white,
-              size: 30,
-            ),
+          child: GestureDetector(
             onTap: () async {
               try {
                 final Uint8List bytes = File(audioFile.path).readAsBytesSync();
@@ -139,90 +131,110 @@ class _HomeScreenState extends State<HomeScreen> {
                 return;
               }
             },
+            child: Container(
+              decoration: BoxDecoration(
+                color: Constants.shareColor,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Icon(
+                MaterialIcons.share,
+                color: Colors.white,
+                size: 30,
+              ),
+            ),
           ),
         ),
-        Container(
-          margin: EdgeInsets.only(top: 6, left: 6),
-          child: SlideAction(
-            decoration: BoxDecoration(
-                color: Constants.editColor,
-                borderRadius: BorderRadius.circular(15)),
-            child: Icon(
-              MaterialIcons.color_lens,
-              color: Colors.white,
-              size: 30,
-            ),
-            onTap: () async {
-              int newColorIndex = await _showEditColorDialog(
-                  context, _theme, audioFile.colorIndex);
-              if (newColorIndex == null) return;
+        GestureDetector(
+          onTap: () async {
+            int newColorIndex = await _showEditColorDialog(
+                context, _theme, audioFile.colorIndex);
+            if (newColorIndex == null) return;
 
-              setState(() {
-                audioFile.update(
-                    color: _theme.themeSet[newColorIndex]['color'],
-                    colorIndex: newColorIndex);
-              });
-            },
+            setState(() {
+              audioFile.update(
+                  color: _theme.themeSet[newColorIndex]['color'],
+                  colorIndex: newColorIndex);
+            });
+          },
+          child: Container(
+            height: double.infinity,
+            margin: EdgeInsets.only(top: 6, left: 6),
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Constants.editColor,
+                  borderRadius: BorderRadius.circular(15)),
+              child: Icon(
+                MaterialIcons.color_lens,
+                color: Colors.white,
+                size: 30,
+              ),
+            ),
           ),
-        )
+        ),
       ],
       secondaryActions: <Widget>[
-        Container(
-          margin: EdgeInsets.only(top: 6, right: 6),
-          child: SlideAction(
-            decoration: BoxDecoration(
-                color: Constants.correctColor,
-                borderRadius: BorderRadius.circular(15)),
-            child: Icon(
-              Icons.edit,
-              color: Colors.white,
-              size: 30,
+        GestureDetector(
+          onTap: () async {
+            String newFileName =
+                await _showFileNameDialog(context, audioFile.title);
+            if (newFileName == null) {
+              return;
+            }
+
+            Directory docDir = await getApplicationDocumentsDirectory();
+            File newFile = await moveFile(
+                file, '${docDir.path}/audio', '$newFileName.aac');
+
+            setState(() {
+              _audioFileList[index]
+                  .update(newTitle: newFileName, newPath: newFile.path);
+            });
+
+            // Update fileUriOrderList in sharedPref
+            saveEncodedFileOrderList(_audioFileList);
+          },
+          child: Container(
+            height: double.infinity,
+            margin: EdgeInsets.only(top: 6, right: 6),
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Constants.correctColor,
+                  borderRadius: BorderRadius.circular(15)),
+              child: Icon(
+                Icons.edit,
+                color: Colors.white,
+                size: 30,
+              ),
             ),
-            onTap: () async {
-              String newFileName =
-                  await _showFileNameDialog(context, audioFile.title);
-              if (newFileName == null) {
-                return;
-              }
-
-              Directory docDir = await getApplicationDocumentsDirectory();
-              File newFile = await moveFile(
-                  file, '${docDir.path}/audio', '$newFileName.aac');
-
-              setState(() {
-                _audioFileList[index]
-                    .update(newTitle: newFileName, newPath: newFile.path);
-              });
-
-              // Update fileUriOrderList in sharedPref
-              saveEncodedFileOrderList(_audioFileList);
-            },
           ),
         ),
-        Container(
-          margin: EdgeInsets.only(top: 6, right: 6),
-          child: SlideAction(
-            decoration: BoxDecoration(
-                color: Constants.wrongColor,
-                borderRadius: BorderRadius.circular(15)),
-            child: Icon(
-              Icons.delete_forever,
-              color: Colors.white,
-              size: 30,
-            ),
-            onTap: () {
-              file.delete();
-              setState(() {
-                _audioFileList.removeAt(index);
-              });
-              _lastColorIndex--;
-              if (_lastColorIndex < 0) {
-                _lastColorIndex = _theme.themeSet.length - 1;
-              }
+        GestureDetector(
+          onTap: () {
+            file.delete();
+            setState(() {
+              _audioFileList.removeAt(index);
+            });
+            _lastColorIndex--;
+            if (_lastColorIndex < 0) {
+              _lastColorIndex = _theme.themeSet.length - 1;
+            }
 
-              // Update fileUriOrderList in sharedPref
-              saveEncodedFileOrderList(_audioFileList);
-            },
+            // Update fileUriOrderList in sharedPref
+            saveEncodedFileOrderList(_audioFileList);
+          },
+          child: Container(
+            height: double.infinity,
+            margin: EdgeInsets.only(top: 6, right: 6),
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Constants.wrongColor,
+                  borderRadius: BorderRadius.circular(15)),
+              child: Icon(
+                Icons.delete_forever,
+                color: Colors.white,
+                size: 30,
+              ),
+            ),
           ),
         ),
       ],

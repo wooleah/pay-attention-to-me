@@ -18,16 +18,45 @@ class SettingsPage extends StatefulWidget {
   _SettingsPageState createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _SettingsPageState extends State<SettingsPage>
+    with SingleTickerProviderStateMixin {
   CustomTheme _selectedTheme;
   double _selectedFontSize;
   bool _saveEnabled = false;
+  AnimationController _animationController;
+  double _saveBtnSize = 125;
 
   @override
   void initState() {
     super.initState();
     _selectedTheme = widget.currentTheme;
     _selectedFontSize = widget.currentFontSize;
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 700),
+      lowerBound: 1,
+      upperBound: 1.3,
+    )
+      ..addListener(() {
+        setState(() {
+          _saveBtnSize = _animationController.value * 125;
+        });
+      })
+      ..addStatusListener((status) {
+        setState(() {
+          if (status == AnimationStatus.completed) {
+            _animationController.reverse();
+          } else if (status == AnimationStatus.dismissed) {
+            _animationController.forward();
+          }
+        });
+      });
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -79,6 +108,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   setState(() {
                     _selectedTheme = val;
                     _saveEnabled = true;
+                    _animationController.forward();
                   });
                 },
               ),
@@ -121,18 +151,42 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             SizedBox(height: 40),
-            FlatButton.icon(
-              onPressed: _saveEnabled
-                  ? () {
-                      widget.onSettingsSave(_selectedTheme, _selectedFontSize);
-                    }
-                  : null,
-              disabledColor: Colors.white10,
-              icon: Icon(Icons.save),
-              label: Text(
-                'SAVE',
-                style: Constants.settingsPageTextStyle.copyWith(
-                  fontWeight: FontWeight.bold,
+            Transform.scale(
+              scale: 1.1,
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 500),
+                width: _saveBtnSize,
+                decoration: BoxDecoration(
+                  color: _saveEnabled
+                      ? Constants.correctColor.withOpacity(0.2)
+                      : Constants.wrongColor.withOpacity(0.01),
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: FlatButton.icon(
+                  onPressed: _saveEnabled
+                      ? () {
+                          widget.onSettingsSave(
+                            _selectedTheme,
+                            _selectedFontSize,
+                          );
+                        }
+                      : null,
+                  disabledColor: Colors.white10,
+                  icon: Icon(
+                    Icons.save,
+                    color: _saveEnabled
+                        ? Constants.correctColor
+                        : Constants.wrongColor.withOpacity(0.5),
+                  ),
+                  label: Text(
+                    'SAVE',
+                    style: Constants.settingsPageTextStyle.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: _saveEnabled
+                          ? Constants.correctColor
+                          : Constants.wrongColor.withOpacity(0.5),
+                    ),
+                  ),
                 ),
               ),
             ),

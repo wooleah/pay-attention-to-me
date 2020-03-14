@@ -122,7 +122,7 @@ const ColorTheme_space = CustomTheme(
   boxfit: BoxFit.fill,
   appTitleColor: Color(0xffE0E8FF),
   appTitleBackgroundColor: Color(0xff56597A),
-  listBackgroundColor: Color(0xff56597A),
+  listBackgroundColor: Color(0xff000000),
   fabColor: Color(0xffF7D06F),
   appBarImagePath: 'assets/images/space.png',
   settingsPageColor: Color(0xff56597A),
