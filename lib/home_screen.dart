@@ -503,6 +503,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (context) {
                     return Recorder(
                       onFileSaveCb: (File file) {
+                        _lastColorIndex++;
+                        if (_lastColorIndex >= _theme.themeSet.length) {
+                          _lastColorIndex = 0;
+                        }
+
                         Map<String, dynamic> selectedThemeSet =
                             _theme.themeSet[_lastColorIndex];
                         setState(() {
@@ -516,11 +521,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           ));
                         });
 
-                        _lastColorIndex++;
-                        if (_lastColorIndex >= _theme.themeSet.length) {
-                          _lastColorIndex = 0;
-                        }
-
                         // Update fileUriOrderList in sharedPref
                         saveEncodedFileOrderList(_audioFileList);
 
@@ -530,6 +530,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             duration: const Duration(milliseconds: 700));
                       },
                       onFilesImportedCb: (List<File> files) {
+                        _lastColorIndex++;
+                        if (_lastColorIndex >= _theme.themeSet.length) {
+                          _lastColorIndex = 0;
+                        }
+
                         files.forEach((file) {
                           Map<String, dynamic> selectedThemeSet =
                               _theme.themeSet[_lastColorIndex];
@@ -543,11 +548,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               colorIndex: _lastColorIndex,
                             ));
                           });
-
-                          _lastColorIndex++;
-                          if (_lastColorIndex >= _theme.themeSet.length) {
-                            _lastColorIndex = 0;
-                          }
                         });
 
                         // Update fileUriOrderList in sharedPref
