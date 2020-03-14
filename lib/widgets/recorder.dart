@@ -13,6 +13,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:heyListen/models/customTheme.dart';
 import 'package:heyListen/util/commonFileFunc.dart';
 
+import 'package:heyListen/constants.dart' as Constants;
+
 enum RecorderState {
   RECORD_READY,
   RECORDING,
@@ -240,6 +242,10 @@ class _RecorderState extends State<Recorder> {
       setState(() {
         _recorderTxt = getTimeInFormat(_totalRecordedTime).substring(0, 8);
       });
+
+      if (_totalRecordedTime >= Constants.maxRecordingTime) {
+        stopRecorder();
+      }
     });
   }
 

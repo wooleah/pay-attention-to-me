@@ -11,6 +11,8 @@ const String TEST_ADUNIT_ID = 'ca-app-pub-3940256099942544/1033173712';
 const String companyLogoWithNamePath = 'assets/images/lovebirdsWithLogo.png';
 const String companyLogoPath = 'assets/images/lovebirds.png';
 
+const int maxRecordingTime = 120000; // milli
+
 const Color correctColor = Color(0xff78BF45);
 const Color wrongColor = Color(0xffF26666);
 const Color editColor = Colors.brown;
@@ -158,22 +160,3 @@ const Map<String, double> FontSizes = {
 const settingsPageTextStyle = TextStyle(
   fontSize: 18,
 );
-
-// const assetPath = 'assets/sounds';
-// List<AudioFile> voiceDataList = [
-//   AudioFile(
-//       path: "$assetPath/payattentiontome.mp3", title: 'Pay attention to me!'),
-//   AudioFile(
-//       path: "$assetPath/payattentionsong.mp3", title: 'Pay attention song'),
-//   AudioFile(path: "$assetPath/honkyboysong.mp3", title: 'HB song'),
-//   AudioFile(path: "$assetPath/moo.mp3", title: 'Moo'),
-//   AudioFile(path: "$assetPath/Woojae!.mp3", title: 'Woojae!'),
-//   AudioFile(path: "$assetPath/yousook.mp3", title: 'You sook'),
-//   AudioFile(path: "$assetPath/suckmybutt.mp3", title: 'Suck mabutt'),
-//   AudioFile(path: "$assetPath/whatsfordinner.mp3", title: "What's for dinner"),
-//   AudioFile(path: "$assetPath/whatta.mp3", title: 'What-ta'),
-//   AudioFile(path: "$assetPath/questionbutnot.mp3", title: 'Question but not'),
-//   AudioFile(path: "$assetPath/cerealparty.mp3", title: 'Cereal party!'),
-//   AudioFile(path: "$assetPath/ipooped.mp3", title: 'I puped'),
-//   AudioFile(path: "$assetPath/leavemealone.mp3", title: 'Leave me alone'),
-// ];

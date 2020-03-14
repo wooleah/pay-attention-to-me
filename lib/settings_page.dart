@@ -8,8 +8,11 @@ class SettingsPage extends StatefulWidget {
   final double currentFontSize;
   final Function onSettingsSave;
 
-  const SettingsPage(
-      {this.currentTheme, this.currentFontSize, this.onSettingsSave});
+  const SettingsPage({
+    this.currentTheme,
+    this.currentFontSize,
+    this.onSettingsSave,
+  });
 
   @override
   _SettingsPageState createState() => _SettingsPageState();
@@ -34,16 +37,15 @@ class _SettingsPageState extends State<SettingsPage> {
         color: widget.currentTheme.settingsPageColor,
         // image: DecorationImage(image: AssetImage('assets/images/stripes.png'), fit: BoxFit.fill)
       ),
-      padding: const EdgeInsets.symmetric(vertical: 120, horizontal: 70),
+      padding: EdgeInsets.symmetric(
+          vertical: MediaQuery.of(context).size.height / 16, horizontal: 70),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          // border: Border.all(color: Colors.black, width: 1),
           borderRadius: BorderRadius.circular(15),
         ),
-        padding: const EdgeInsets.only(top: 60),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
               'Theme',

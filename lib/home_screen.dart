@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'dart:io';
 import 'package:path/path.dart' as path;
@@ -22,6 +23,7 @@ import './widgets/edit_color_dialog.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 
 import 'models/customTheme.dart';
+import 'widgets/animatedButton.dart';
 
 class HomeScreen extends StatefulWidget {
   final dynamic initialTheme;
@@ -59,11 +61,13 @@ class _HomeScreenState extends State<HomeScreen> {
     flutterSound = FlutterSound();
     _pageController = PageController();
 
+    // Initialize theme
     _theme = widget.initialTheme;
     _itemFontSize = widget.initialItemFontSize;
     _lastColorIndex = widget.initialLastColorIndex;
     _audioFileList = widget.initialAudioFileList;
 
+    // Initialize Ad
     FirebaseAdMob.instance.initialize(appId: Constants.ADMOB_ID);
     _targetingInfo = MobileAdTargetingInfo(
       keywords: <String>['sound', 'play', 'fun', 'soundboard', 'record'],
@@ -76,10 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
-    // if (_recorderStatus == RecorderState.PLAYING) {
-    //   flutterSound.stopPlayer();
-    // }
-    _pageController?.dispose();
+    _pageController.dispose();
     _myInterstitial?.dispose();
     super.dispose();
   }
@@ -110,65 +111,10 @@ class _HomeScreenState extends State<HomeScreen> {
       controller: _slidableController,
       actionPane: SlidableScrollActionPane(),
       actionExtentRatio: 0.25,
-      child: InkWell(
-        onTap: () => startPlayer(audioFile.path),
-        child: Container(
-          color: Colors.white,
-          child: Container(
-            decoration: BoxDecoration(
-              color: audioFile.color,
-              image: audioFile.background != ''
-                  ? DecorationImage(
-                      image: AssetImage(audioFile.background),
-                      fit: BoxFit.fill,
-                      colorFilter: ColorFilter.mode(
-                          Colors.white.withOpacity(0.7), BlendMode.srcIn),
-                    )
-                  : null,
-              borderRadius: BorderRadius.circular(15),
-              // boxShadow: [
-              //   BoxShadow(
-              //     color: Colors.red,
-              //     blurRadius: 20.0, // has the effect of softening the shadow
-              //     spreadRadius: 5.0, // has the effect of extending the shadow
-              //     offset: Offset(
-              //       10.0, // horizontal, move right 10
-              //       10.0, // vertical, move down 10
-              //     ),
-              //   )
-              // ],
-            ),
-            margin: const EdgeInsets.only(top: 6, left: 6, right: 6),
-            // padding: const EdgeInsets.only(left: 10),
-            height: 100,
-            child: Row(
-              children: <Widget>[
-                SizedBox(width: 10),
-                Expanded(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      audioFile.title,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: _itemFontSize,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 2,
-                      ),
-                    ),
-                  ),
-                ),
-                Icon(
-                  Octicons.chevron_left,
-                  color: Colors.white,
-                  size: 25,
-                ),
-                SizedBox(width: 10)
-              ],
-            ),
-          ),
-        ),
+      child: AnimatedButton(
+        audioFile: audioFile,
+        itemFontSize: _itemFontSize,
+        onTapCb: () => startPlayer(audioFile.path),
       ),
       actions: <Widget>[
         Container(
@@ -335,6 +281,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
     // Make sure there is a scroll controller attached to the scroll view that contains ReorderableSliverList.
     // Otherwise an error will be thrown.
     ScrollController _scrollController =
