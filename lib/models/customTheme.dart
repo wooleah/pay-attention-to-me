@@ -8,6 +8,7 @@ class CustomTheme {
   final BoxFit boxfit; // optional
   final Color appTitleColor;
   final Color appTitleBackgroundColor;
+  final Color listBackgroundColor;
   final Color fabColor;
   final String appBarImagePath;
   final Color settingsPageColor;
@@ -19,6 +20,7 @@ class CustomTheme {
     this.boxfit,
     this.appTitleColor,
     this.appTitleBackgroundColor,
+    this.listBackgroundColor,
     this.fabColor,
     this.appBarImagePath,
     this.settingsPageColor,

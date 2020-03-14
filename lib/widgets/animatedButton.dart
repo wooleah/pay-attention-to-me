@@ -54,67 +54,64 @@ class _AnimatedButtonState extends State<AnimatedButton>
   Widget build(BuildContext context) {
     _voiceBtnScale = 1 - _voiceBtnController.value;
 
-    return Container(
-      // color: Colors.white,
-      child: GestureDetector(
-        onTap: _onVoiceBtnTapDown,
-        child: Transform.scale(
-          scale: _voiceBtnScale,
-          child: Container(
-            decoration: BoxDecoration(
-              color: widget.audioFile.color,
-              image: widget.audioFile.background != ''
-                  ? DecorationImage(
-                      image: AssetImage(widget.audioFile.background),
-                      fit: BoxFit.fill,
-                      colorFilter: ColorFilter.mode(
-                        Colors.white.withOpacity(0.7),
-                        BlendMode.srcIn,
-                      ),
-                    )
-                  : null,
-              borderRadius: BorderRadius.circular(15),
-              // boxShadow: [
-              //   BoxShadow(
-              //     color: Colors.black,
-              //     blurRadius: 20.0, // has the effect of softening the shadow
-              //     spreadRadius: 5.0, // has the effect of extending the shadow
-              //     offset: Offset(
-              //       5.0, // horizontal, move right 10
-              //       5.0, // vertical, move down 10
-              //     ),
-              //   )
-              // ],
-            ),
-            margin: const EdgeInsets.only(top: 6, left: 6, right: 6),
-            // padding: const EdgeInsets.only(left: 10),
-            height: 100,
-            child: Row(
-              children: <Widget>[
-                SizedBox(width: 10),
-                Expanded(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      widget.audioFile.title,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: widget.itemFontSize,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 2,
-                      ),
+    return GestureDetector(
+      onTap: _onVoiceBtnTapDown,
+      child: Transform.scale(
+        scale: _voiceBtnScale,
+        child: Container(
+          decoration: BoxDecoration(
+            color: widget.audioFile.color,
+            image: widget.audioFile.background != ''
+                ? DecorationImage(
+                    image: AssetImage(widget.audioFile.background),
+                    fit: BoxFit.fill,
+                    colorFilter: ColorFilter.mode(
+                      Colors.white.withOpacity(0.7),
+                      BlendMode.srcIn,
+                    ),
+                  )
+                : null,
+            borderRadius: BorderRadius.circular(15),
+            // boxShadow: [
+            //   BoxShadow(
+            //     color: Colors.black,
+            //     blurRadius: 20.0, // has the effect of softening the shadow
+            //     spreadRadius: 5.0, // has the effect of extending the shadow
+            //     offset: Offset(
+            //       5.0, // horizontal, move right 10
+            //       5.0, // vertical, move down 10
+            //     ),
+            //   )
+            // ],
+          ),
+          margin: const EdgeInsets.only(top: 6, left: 6, right: 6),
+          // padding: const EdgeInsets.only(left: 10),
+          height: 100,
+          child: Row(
+            children: <Widget>[
+              SizedBox(width: 10),
+              Expanded(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    widget.audioFile.title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: widget.itemFontSize,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 2,
                     ),
                   ),
                 ),
-                Icon(
-                  Octicons.chevron_left,
-                  color: Colors.white,
-                  size: 25,
-                ),
-                SizedBox(width: 10)
-              ],
-            ),
+              ),
+              Icon(
+                Octicons.chevron_left,
+                color: Colors.white,
+                size: 25,
+              ),
+              SizedBox(width: 10)
+            ],
           ),
         ),
       ),

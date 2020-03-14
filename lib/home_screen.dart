@@ -292,7 +292,7 @@ class _HomeScreenState extends State<HomeScreen> {
         PrimaryScrollController.of(context) ?? ScrollController();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: _theme.listBackgroundColor,
       body: SafeArea(
         child: PageView(
           controller: _pageController,
@@ -363,8 +363,25 @@ class _HomeScreenState extends State<HomeScreen> {
                     delegate: ReorderableSliverChildListDelegate(
                       List.generate(_audioFileList.length,
                           (index) => _getVoiceItem(context, index)),
-                      // addRepaintBoundaries: false,
+                      addRepaintBoundaries: false,
                     ),
+                    buildDraggableFeedback: (context, constraints, child) =>
+                        Transform(
+                            transform: Matrix4.rotationZ(0),
+                            alignment: FractionalOffset.topLeft,
+                            child: Material(
+                              child: Card(
+                                elevation: 0,
+                                color: Colors.transparent,
+                                child: ConstrainedBox(
+                                  constraints: constraints,
+                                  child: child,
+                                ),
+                              ),
+                              elevation: 6.0,
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.zero,
+                            )),
                     // or use ReorderableSliverChildBuilderDelegate if needed
                     //          delegate: ReorderableSliverChildBuilderDelegate(
                     //            (BuildContext context, int index) => _rows[index],
