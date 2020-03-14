@@ -66,7 +66,7 @@ class _SettingsPageState extends State<SettingsPage>
         color: widget.currentTheme.settingsPageColor,
         // image: DecorationImage(image: AssetImage('assets/images/stripes.png'), fit: BoxFit.fill)
       ),
-      padding: EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
           vertical: MediaQuery.of(context).size.height / 16, horizontal: 70),
       child: Container(
         decoration: BoxDecoration(
@@ -89,7 +89,7 @@ class _SettingsPageState extends State<SettingsPage>
               child: DropdownButton(
                 isExpanded: true,
                 value: _selectedTheme,
-                hint: Text(
+                hint: const Text(
                   'Select your theme',
                   style: Constants.settingsPageTextStyle,
                 ),
@@ -127,7 +127,7 @@ class _SettingsPageState extends State<SettingsPage>
               child: DropdownButton(
                 isExpanded: true,
                 value: _selectedFontSize,
-                hint: Text(
+                hint: const Text(
                   'Select your font size',
                   style: Constants.settingsPageTextStyle,
                 ),

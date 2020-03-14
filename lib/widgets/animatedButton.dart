@@ -85,7 +85,6 @@ class _AnimatedButtonState extends State<AnimatedButton>
             // ],
           ),
           margin: const EdgeInsets.only(top: 6, left: 6, right: 6),
-          // padding: const EdgeInsets.only(left: 10),
           height: 100,
           child: Row(
             children: <Widget>[

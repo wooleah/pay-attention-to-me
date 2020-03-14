@@ -83,7 +83,7 @@ class _RecorderState extends State<Recorder> {
               Transform.rotate(
                 angle: pi,
                 child: IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Entypo.export,
                     size: 30,
                     color: Colors.white,
@@ -137,7 +137,7 @@ class _RecorderState extends State<Recorder> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text(
+                child: const Text(
                   'Cancel',
                   style: TextStyle(
                     fontSize: 20,
@@ -335,7 +335,7 @@ class _RecorderState extends State<Recorder> {
           ),
           actions: <Widget>[
             FlatButton(
-              child: Text(
+              child: const Text(
                 'Cancel',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -346,7 +346,7 @@ class _RecorderState extends State<Recorder> {
               },
             ),
             FlatButton(
-              child: Text(
+              child: const Text(
                 'OK',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,

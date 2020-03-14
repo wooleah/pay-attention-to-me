@@ -119,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
       actions: <Widget>[
         Container(
           height: double.infinity,
-          margin: EdgeInsets.only(top: 6, left: 6),
+          margin: const EdgeInsets.only(top: 6, left: 6),
           child: GestureDetector(
             onTap: () async {
               try {
@@ -158,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           child: Container(
             height: double.infinity,
-            margin: EdgeInsets.only(top: 6, left: 6),
+            margin: const EdgeInsets.only(top: 6, left: 6),
             child: Container(
               decoration: BoxDecoration(
                   color: Constants.editColor,
@@ -195,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           child: Container(
             height: double.infinity,
-            margin: EdgeInsets.only(top: 6, right: 6),
+            margin: const EdgeInsets.only(top: 6, right: 6),
             child: Container(
               decoration: BoxDecoration(
                   color: Constants.correctColor,
@@ -224,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           child: Container(
             height: double.infinity,
-            margin: EdgeInsets.only(top: 6, right: 6),
+            margin: const EdgeInsets.only(top: 6, right: 6),
             child: Container(
               decoration: BoxDecoration(
                   color: Constants.wrongColor,
@@ -444,14 +444,14 @@ class _HomeScreenState extends State<HomeScreen> {
             _pageController.animateToPage(index,
                 duration: Duration(milliseconds: 300), curve: Curves.ease);
           }),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
           elevation: 15,
           fabLocation: BubbleBottomBarFabLocation.end, //new
           hasNotch: true, //new
           hasInk: true, //new, gives a cute ink effect
           inkColor:
               Colors.black12, //optional, uses theme color if not specified
-          items: <BubbleBottomBarItem>[
+          items: const <BubbleBottomBarItem>[
             BubbleBottomBarItem(
               backgroundColor: Constants.wrongColor,
               icon: Icon(

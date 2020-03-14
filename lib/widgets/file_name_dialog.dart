@@ -27,7 +27,7 @@ class _FileNameDialogState extends State<FileNameDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(
+      title: const Text(
         'Name of your file?',
         style: TextStyle(
           fontWeight: FontWeight.bold,
@@ -36,7 +36,7 @@ class _FileNameDialogState extends State<FileNameDialog> {
       content: TextField(controller: _fileNameTextFieldController),
       actions: <Widget>[
         FlatButton(
-          child: Text(
+          child: const Text(
             'Cancel',
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -47,7 +47,7 @@ class _FileNameDialogState extends State<FileNameDialog> {
           },
         ),
         FlatButton(
-          child: Text(
+          child: const Text(
             'OK',
             style: TextStyle(
               fontWeight: FontWeight.bold,

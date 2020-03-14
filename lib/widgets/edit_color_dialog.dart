@@ -22,7 +22,7 @@ class _EditColorDialogState extends State<EditColorDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(
+      title: const Text(
         'Change the color',
         style: TextStyle(
           fontWeight: FontWeight.bold,
@@ -50,7 +50,7 @@ class _EditColorDialogState extends State<EditColorDialog> {
       ),
       actions: <Widget>[
         FlatButton(
-          child: Text(
+          child: const Text(
             'Cancel',
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -61,7 +61,7 @@ class _EditColorDialogState extends State<EditColorDialog> {
           },
         ),
         FlatButton(
-          child: Text(
+          child: const Text(
             'Save',
             style: TextStyle(
               fontWeight: FontWeight.bold,
