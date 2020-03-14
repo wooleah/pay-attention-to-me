@@ -146,6 +146,7 @@ class _SettingsPageState extends State<SettingsPage>
                   setState(() {
                     _selectedFontSize = val;
                     _saveEnabled = true;
+                    _animationController.forward();
                   });
                 },
               ),
