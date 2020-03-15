@@ -15,6 +15,7 @@ const int maxRecordingTime = 120000; // milli
 
 const Color correctColor = Color(0xff78BF45);
 const Color wrongColor = Color(0xffF26666);
+const Color settingsColor = Colors.blueGrey;
 const Color editColor = Colors.brown;
 const Color shareColor = Colors.grey;
 
@@ -106,23 +107,23 @@ const ColorTheme_message = CustomTheme(
 const ColorTheme_space = CustomTheme(
   themeName: 'Space',
   colors: [
-    Color(0xff51608C),
     Color(0xff7E94D9),
     Color(0xff8C919F),
     Color(0xffBFC5D9),
+    Color(0xffDDB033),
     Color(0xff343D59),
   ],
   themeSet: [
-    {'color': Color(0xff51608C), 'background': 'assets/images/ufos.png'},
     {'color': Color(0xff7E94D9), 'background': 'assets/images/stars.png'},
     {'color': Color(0xff8C919F), 'background': 'assets/images/earth.png'},
     {'color': Color(0xffBFC5D9), 'background': 'assets/images/stars.png'},
+    {'color': Color(0xffDDB033), 'background': 'assets/images/ufos.png'},
     {'color': Color(0xff343D59), 'background': 'assets/images/astronaut.png'},
   ],
   boxfit: BoxFit.fill,
   appTitleColor: Color(0xffE0E8FF),
   appTitleBackgroundColor: Color(0xff56597A),
-  listBackgroundColor: Color(0xff000000),
+  listBackgroundColor: Color(0xff56597A),
   fabColor: Color(0xffF7D06F),
   appBarImagePath: 'assets/images/space.png',
   settingsPageColor: Color(0xff56597A),
@@ -133,16 +134,16 @@ const ColorTheme_sunset = CustomTheme(
   colors: [
     Color(0xff49669C),
     Color(0xffF2C12E),
+    Color(0xffF2A02E),
     Color(0xffF26716),
     Color(0xffD61C04),
-    Color(0xff332418),
   ],
   themeSet: [
     {'color': Color(0xff49669C), 'background': 'assets/images/tent.png'},
     {'color': Color(0xffF2C12E), 'background': 'assets/images/clouds.png'},
+    {'color': Color(0xffF2A02E), 'background': 'assets/images/mountains.png'},
     {'color': Color(0xffF26716), 'background': 'assets/images/cacti.png'},
     {'color': Color(0xffD61C04), 'background': 'assets/images/clouds.png'},
-    {'color': Color(0xff332418), 'background': 'assets/images/mountains.png'},
   ],
   boxfit: BoxFit.fill,
   appTitleColor: Color(0xffFFFED9),

@@ -471,14 +471,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             BubbleBottomBarItem(
-              backgroundColor: Constants.correctColor,
+              backgroundColor: Constants.settingsColor,
               icon: Icon(
                 Icons.settings,
                 color: Colors.black,
               ),
               activeIcon: Icon(
                 Icons.settings,
-                color: Constants.correctColor,
+                color: Constants.settingsColor,
               ),
               title: Text(
                 "Settings",
