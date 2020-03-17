@@ -113,9 +113,7 @@ class _WrapperState extends State<Wrapper> {
           );
         } else {
           return Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
+            body: Center(),
           );
         }
       },
