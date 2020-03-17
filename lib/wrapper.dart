@@ -113,7 +113,15 @@ class _WrapperState extends State<Wrapper> {
           );
         } else {
           return Scaffold(
-            body: Center(),
+            body: SafeArea(
+              child: Container(
+                height: double.infinity,
+                child: Image.asset(
+                  'assets/images/splash_screen1.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
           );
         }
       },
