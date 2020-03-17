@@ -10,6 +10,6 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/launcher_icon" />
+            android:src="@drawable/splash_screen1" />
     </item>
 </layer-list>
