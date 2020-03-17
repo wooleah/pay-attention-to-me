@@ -104,7 +104,9 @@ class RootApp extends StatelessWidget {
       home: Builder(
         //add builder here to have a context where navigator is available
         builder: (context) => SplashScreen.callback(
-          name: 'assets/animations/Space.flr',
+          name: 'assets/animations/Listen.flr',
+          width: double.infinity,
+          fit: BoxFit.cover,
           onSuccess: (_) {
             Navigator.of(context).pushReplacement(
               PageRouteBuilder(
@@ -134,9 +136,9 @@ class RootApp extends StatelessWidget {
               ),
             );
           },
-          loopAnimation: 'Space',
+          loopAnimation: 'go',
           until: () => Future.wait([_init()]),
-          endAnimation: 'Space',
+          endAnimation: 'go',
           onError: (error, stacktrace) {
             print(error);
           },
