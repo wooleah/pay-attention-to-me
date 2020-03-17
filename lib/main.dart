@@ -116,7 +116,7 @@ class RootApp extends StatelessWidget {
                     initialLastColorIndex: _lastColorIndex,
                   );
                 },
-                transitionDuration: Duration(milliseconds: 1000),
+                transitionDuration: Duration(milliseconds: 500),
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) {
                   var begin = Offset(0.0, 1.0);
