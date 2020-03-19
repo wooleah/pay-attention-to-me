@@ -10,10 +10,10 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/splash" />
+            android:src="@drawable/splash_screen1" />
     </item>
-    <item>
+    <!-- <item>
         <bitmap android:gravity="fill" android:src="@drawable/splash" />
-    </item>
+    </item> -->
 
 </layer-list>
