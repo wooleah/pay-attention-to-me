@@ -17,13 +17,14 @@ class AudioFile {
     this.background,
   });
 
-  update(
-      {String newPath,
-      String newUri,
-      String newTitle,
-      Color color,
-      int colorIndex,
-      String background}) {
+  update({
+    String newPath,
+    String newUri,
+    String newTitle,
+    Color color,
+    int colorIndex,
+    String background,
+  }) {
     if (newPath != null) {
       this.path = newPath;
     }

@@ -15,6 +15,7 @@ import 'package:heyListen/widgets/recorder.dart';
 import 'package:reorderables/reorderables.dart';
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:firebase_admob/firebase_admob.dart';
+import './widgets/slidableActionButton.dart';
 
 import 'constants.dart' as Constants;
 import 'models/audiofile.dart';
@@ -71,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // Initialize Ad
     FirebaseAdMob.instance.initialize(appId: Constants.ADMOB_ID);
     _targetingInfo = MobileAdTargetingInfo(
+      // TODO check which keywords would suit the best
       keywords: <String>['sound', 'play', 'fun', 'soundboard', 'record'],
       // contentUrl: 'https://flutter.io',
       childDirected: true,
@@ -118,64 +120,63 @@ class _HomeScreenState extends State<HomeScreen> {
         onTapCb: () => startPlayer(audioFile.path),
       ),
       actions: <Widget>[
-        Container(
-          height: double.infinity,
-          margin: const EdgeInsets.only(top: 6, left: 6),
-          child: GestureDetector(
-            onTap: () async {
-              try {
-                final Uint8List bytes = File(audioFile.path).readAsBytesSync();
-                await Share.file(audioFile.title, path.basename(audioFile.path),
-                    bytes.buffer.asUint8List(), '	audio/*',
-                    text: 'testing share');
-              } catch (err) {
-                return;
-              }
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: Constants.shareColor,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Icon(
-                MaterialIcons.share,
-                color: Colors.white,
-                size: 30,
-              ),
-            ),
-          ),
-        ),
-        GestureDetector(
-          onTap: () async {
+        // Container(
+        //   height: double.infinity,
+        //   margin: const EdgeInsets.only(top: 6, left: 6),
+        //   child: GestureDetector(
+        //     onTap: () async {
+        //       try {
+        //         final Uint8List bytes = File(audioFile.path).readAsBytesSync();
+        //         await Share.file(audioFile.title, path.basename(audioFile.path),
+        //             bytes.buffer.asUint8List(), '	audio/*',
+        //             text: 'testing share');
+        //       } catch (err) {
+        //         return;
+        //       }
+        //     },
+        //     child: Container(
+        //       decoration: BoxDecoration(
+        //         color: Constants.shareColor,
+        //         borderRadius: BorderRadius.circular(15),
+        //       ),
+        //       child: Icon(
+        //         MaterialIcons.share,
+        //         color: Colors.white,
+        //         size: 30,
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        SlidableActionButton(
+          color: Constants.editColor,
+          icon: MaterialIcons.color_lens,
+          margin: EdgeInsets.only(top: 6, left: 6),
+          onTap: (BuildContext context) async {
             int newColorIndex = await _showEditColorDialog(
-                context, _theme, audioFile.colorIndex);
+              context,
+              _theme,
+              audioFile.colorIndex,
+            );
             if (newColorIndex == null) return;
 
             setState(() {
               audioFile.update(
-                  color: _theme.themeSet[newColorIndex]['color'],
-                  colorIndex: newColorIndex);
+                color: _theme.themeSet[newColorIndex]['color'],
+                colorIndex: newColorIndex,
+                background: _theme.themeSet[audioFile.colorIndex]['background'],
+              );
             });
+
+            // Update fileUriOrderList in sharedPref
+            saveEncodedFileOrderList(_audioFileList);
           },
-          child: Container(
-            height: double.infinity,
-            margin: const EdgeInsets.only(top: 6, left: 6),
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Constants.editColor,
-                  borderRadius: BorderRadius.circular(15)),
-              child: Icon(
-                MaterialIcons.color_lens,
-                color: Colors.white,
-                size: 30,
-              ),
-            ),
-          ),
         ),
       ],
       secondaryActions: <Widget>[
-        GestureDetector(
-          onTap: () async {
+        SlidableActionButton(
+          color: Constants.correctColor,
+          icon: Icons.edit,
+          onTap: (BuildContext context) async {
             String newFileName =
                 await _showFileNameDialog(context, audioFile.title);
             if (newFileName == null) {
@@ -187,30 +188,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 file, '${docDir.path}/audio', '$newFileName.aac');
 
             setState(() {
-              _audioFileList[index]
-                  .update(newTitle: newFileName, newPath: newFile.path);
+              _audioFileList[index].update(
+                newTitle: newFileName,
+                newPath: newFile.path,
+                newUri: newFile.uri.toString(),
+              );
+              Slidable.of(context).close();
             });
 
             // Update fileUriOrderList in sharedPref
             saveEncodedFileOrderList(_audioFileList);
           },
-          child: Container(
-            height: double.infinity,
-            margin: const EdgeInsets.only(top: 6, right: 6),
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Constants.correctColor,
-                  borderRadius: BorderRadius.circular(15)),
-              child: Icon(
-                Icons.edit,
-                color: Colors.white,
-                size: 30,
-              ),
-            ),
-          ),
         ),
-        GestureDetector(
-          onTap: () {
+        SlidableActionButton(
+          color: Constants.wrongColor,
+          icon: Icons.delete_forever,
+          onTap: (BuildContext context) {
             file.delete();
             setState(() {
               _audioFileList.removeAt(index);
@@ -223,20 +216,6 @@ class _HomeScreenState extends State<HomeScreen> {
             // Update fileUriOrderList in sharedPref
             saveEncodedFileOrderList(_audioFileList);
           },
-          child: Container(
-            height: double.infinity,
-            margin: const EdgeInsets.only(top: 6, right: 6),
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Constants.wrongColor,
-                  borderRadius: BorderRadius.circular(15)),
-              child: Icon(
-                Icons.delete_forever,
-                color: Colors.white,
-                size: 30,
-              ),
-            ),
-          ),
         ),
       ],
     );

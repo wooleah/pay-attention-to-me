@@ -72,17 +72,20 @@ class RootApp extends StatelessWidget {
           };
         }
 
-        _audioFileList = orderedFileList.map((fileObj) {
+        _audioFileList = orderedFileList
+            .where((fileObj) => fileObj['file'] != null)
+            .map((fileObj) {
           _lastColorIndex = count % _theme.themeSet.length;
           count++;
           Map<String, dynamic> selectedThemeSet =
               _theme.themeSet[fileObj['colorIndex']];
+
           return new AudioFile(
             uri: fileObj['file'].uri.toString(),
             path: fileObj['file'].path,
             title: path.basenameWithoutExtension(fileObj['file'].path),
             color: selectedThemeSet['color'],
-            background: selectedThemeSet['background'],
+            background: fileObj['background'],
             colorIndex: fileObj['colorIndex'],
           );
         }).toList();
