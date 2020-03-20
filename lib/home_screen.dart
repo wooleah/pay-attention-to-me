@@ -185,7 +185,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
             Directory docDir = await getApplicationDocumentsDirectory();
             File newFile = await moveFile(
-                file, '${docDir.path}/audio', '$newFileName.aac');
+              file,
+              '${docDir.path}/audio',
+              '$newFileName.aac',
+            );
 
             setState(() {
               _audioFileList[index].update(

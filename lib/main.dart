@@ -139,9 +139,9 @@ class RootApp extends StatelessWidget {
               ),
             );
           },
-          loopAnimation: 'go',
+          loopAnimation: 'Go',
           until: () => Future.wait([_init()]),
-          endAnimation: 'go',
+          endAnimation: 'Go',
           onError: (error, stacktrace) {
             print(error);
           },

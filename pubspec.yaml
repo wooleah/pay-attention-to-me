@@ -48,8 +48,9 @@ flutter_icons:
   ios: true
   image_path: "assets_dev/logo1.png"
 flutter_native_splash:
-  image: assets/images/splash_screen1.png
+  image: assets_dev/splash_screen1_tiny2.9.png
   color: "42a5f5"
+  fill: true
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
