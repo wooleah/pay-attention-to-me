@@ -306,7 +306,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   SliverAppBar(
                     pinned: true,
                     elevation: 8,
-                    expandedHeight: 210.0,
+                    // expandedHeight: 210.0,
+                    expandedHeight: MediaQuery.of(context).size.height / 4,
                     backgroundColor: _theme.appTitleBackgroundColor,
                     actions: <Widget>[
                       IconButton(
@@ -356,27 +357,30 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   ReorderableSliverList(
                     delegate: ReorderableSliverChildListDelegate(
-                      List.generate(_audioFileList.length,
-                          (index) => _getVoiceItem(context, index)),
+                      List.generate(
+                        _audioFileList.length,
+                        (index) => _getVoiceItem(context, index),
+                      ),
                       addRepaintBoundaries: false,
                     ),
                     buildDraggableFeedback: (context, constraints, child) =>
                         Transform(
-                            transform: Matrix4.rotationZ(0),
-                            alignment: FractionalOffset.topLeft,
-                            child: Material(
-                              child: Card(
-                                elevation: 0,
-                                color: Colors.transparent,
-                                child: ConstrainedBox(
-                                  constraints: constraints,
-                                  child: child,
-                                ),
-                              ),
-                              elevation: 6.0,
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.zero,
-                            )),
+                      transform: Matrix4.rotationZ(0),
+                      alignment: FractionalOffset.topLeft,
+                      child: Material(
+                        child: Card(
+                          elevation: 0,
+                          color: Colors.transparent,
+                          child: ConstrainedBox(
+                            constraints: constraints,
+                            child: child,
+                          ),
+                        ),
+                        elevation: 6.0,
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.zero,
+                      ),
+                    ),
                     // or use ReorderableSliverChildBuilderDelegate if needed
                     //          delegate: ReorderableSliverChildBuilderDelegate(
                     //            (BuildContext context, int index) => _rows[index],

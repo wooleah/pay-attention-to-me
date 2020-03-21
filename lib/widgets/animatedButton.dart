@@ -85,7 +85,8 @@ class _AnimatedButtonState extends State<AnimatedButton>
             // ],
           ),
           margin: const EdgeInsets.only(top: 6, left: 6, right: 6),
-          height: 100,
+          // height: 100,
+          height: MediaQuery.of(context).size.height / 8,
           child: Row(
             children: <Widget>[
               SizedBox(width: 10),
