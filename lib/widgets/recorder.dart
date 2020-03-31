@@ -82,7 +82,7 @@ class _RecorderState extends State<Recorder> {
                     color: Colors.white,
                   ),
                   onPressed: () async {
-                    List<File> importedFiles = await FilePicker.getMultiFile();
+                    List<File> importedFiles = await FilePicker.getMultiFile(type: FileType.audio);
                     if (importedFiles == null || importedFiles.length == 0) {
                       return;
                     }

@@ -42,7 +42,6 @@ class RootApp extends StatelessWidget {
         _audioFileList = fileList.map((file) {
           int colorIndex = count % _theme.themeSet.length;
           count++;
-          _lastColorIndex = colorIndex;
           Map<String, dynamic> selectedThemeSet = _theme.themeSet[colorIndex];
           return new AudioFile(
             uri: file.uri.toString(),
@@ -72,7 +71,6 @@ class RootApp extends StatelessWidget {
         }
 
         _audioFileList = orderedFileList.where((fileObj) => fileObj['file'] != null).map((fileObj) {
-          _lastColorIndex = count % _theme.themeSet.length;
           count++;
           Map<String, dynamic> selectedThemeSet = _theme.themeSet[fileObj['colorIndex']];
 
@@ -86,6 +84,9 @@ class RootApp extends StatelessWidget {
           );
         }).toList();
       }
+
+      // set the lastColorIndex
+      _lastColorIndex = (_audioFileList.length % _theme.themeSet.length) - 1;
     } on FileSystemException {
       new Directory('${docDir.path}/audio').createSync();
     }
