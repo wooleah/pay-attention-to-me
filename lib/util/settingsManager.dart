@@ -31,11 +31,11 @@ Future<void> addTutorialVoice() async {
     Directory('$appDir/audio').createSync();
     String audioFileDirPath = Directory('$appDir/audio').path;
     // Copy initial voices into the audio directory
-    var file1 = await writeToFile(initialVoice1, '$audioFileDirPath/Click me.mp3');
-    var file2 = await writeToFile(initialVoice2, '$audioFileDirPath/Click me next.mp3');
-    var file3 = await writeToFile(initialVoice3, '$audioFileDirPath/Press me for 1 second!.mp3');
-    var file4 = await writeToFile(initialVoice4, '$audioFileDirPath/Click me fourth.mp3');
-    var file5 = await writeToFile(initialVoice5, '$audioFileDirPath/Click me last!.mp3');
+    var file1 = await writeToFile(initialVoice1, '$audioFileDirPath/Hi!.mp3');
+    var file2 = await writeToFile(initialVoice2, '$audioFileDirPath/Change the colors.mp3');
+    var file3 = await writeToFile(initialVoice3, '$audioFileDirPath/Move me around.mp3');
+    var file4 = await writeToFile(initialVoice4, '$audioFileDirPath/Record your voice.mp3');
+    var file5 = await writeToFile(initialVoice5, '$audioFileDirPath/Thank you!.mp3');
     await prefs.setBool('gotTutorialFile', true);
 
     // Make the audioFileList to set the initial order of these voices
