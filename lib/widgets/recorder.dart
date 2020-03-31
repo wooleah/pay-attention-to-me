@@ -140,17 +140,17 @@ class _RecorderState extends State<Recorder> {
                 onPressed: _isSaveButtonDisabled
                     ? null
                     : () async {
-                        String text = await _showFileNameDialog(context);
-                        if (text == null) {
+                        String fileName = await _showFileNameDialog(context);
+                        if (fileName == null) {
                           return;
                         }
 
                         // encode before saving
-                        text = Uri.encodeComponent(text);
+                        fileName = Uri.encodeComponent(fileName);
 
                         File file = File(_recordedFilePath);
                         Directory docDir = await getApplicationDocumentsDirectory();
-                        File newFile = await moveFile(file, '${docDir.path}/audio', '$text.aac');
+                        File newFile = await moveFile(file, '${docDir.path}/audio', '$fileName.aac');
                         widget.onFileSaveCb(newFile);
                         Navigator.of(context).pop();
                       },

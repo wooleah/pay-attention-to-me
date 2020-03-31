@@ -162,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
               audioFile.update(
                 color: _theme.themeSet[newColorIndex]['color'],
                 colorIndex: newColorIndex,
-                background: _theme.themeSet[audioFile.colorIndex]['background'],
+                // background: _theme.themeSet[audioFile.colorIndex]['background'],
               );
             });
 
