@@ -13,8 +13,7 @@ Future<File> moveFile(File sourceFile, String newPath, String fileName) async {
   }
 }
 
-Future<void> writeToFile(ByteData data, String path) {
+Future<File> writeToFile(ByteData data, String path) {
   final buffer = data.buffer;
-  return new File(path).writeAsBytes(
-      buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
+  return new File(path).writeAsBytes(buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
 }

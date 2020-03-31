@@ -18,8 +18,7 @@ class SettingsPage extends StatefulWidget {
   _SettingsPageState createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage>
-    with SingleTickerProviderStateMixin {
+class _SettingsPageState extends State<SettingsPage> with SingleTickerProviderStateMixin {
   CustomTheme _selectedTheme;
   double _selectedFontSize;
   bool _saveEnabled = false;
@@ -66,8 +65,7 @@ class _SettingsPageState extends State<SettingsPage>
         color: widget.currentTheme.settingsPageColor,
         // image: DecorationImage(image: AssetImage('assets/images/stripes.png'), fit: BoxFit.fill)
       ),
-      padding: EdgeInsets.symmetric(
-          vertical: MediaQuery.of(context).size.height / 16, horizontal: 70),
+      padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height / 16, horizontal: 70),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -158,9 +156,8 @@ class _SettingsPageState extends State<SettingsPage>
                 duration: Duration(milliseconds: 500),
                 width: _saveBtnSize,
                 decoration: BoxDecoration(
-                  color: _saveEnabled
-                      ? Constants.correctColor.withOpacity(0.2)
-                      : Constants.wrongColor.withOpacity(0.01),
+                  color:
+                      _saveEnabled ? Constants.correctColor.withOpacity(0.2) : Constants.wrongColor.withOpacity(0.01),
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: FlatButton.icon(
@@ -175,17 +172,13 @@ class _SettingsPageState extends State<SettingsPage>
                   disabledColor: Colors.white10,
                   icon: Icon(
                     Icons.save,
-                    color: _saveEnabled
-                        ? Constants.correctColor
-                        : Constants.wrongColor.withOpacity(0.5),
+                    color: _saveEnabled ? Constants.correctColor : Constants.wrongColor.withOpacity(0.5),
                   ),
                   label: Text(
                     'SAVE',
                     style: Constants.settingsPageTextStyle.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: _saveEnabled
-                          ? Constants.correctColor
-                          : Constants.wrongColor.withOpacity(0.5),
+                      color: _saveEnabled ? Constants.correctColor : Constants.wrongColor.withOpacity(0.5),
                     ),
                   ),
                 ),

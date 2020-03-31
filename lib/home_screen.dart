@@ -94,8 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
       adUnitId: Constants.PROD_ADUNIT_ID,
       targetingInfo: _targetingInfo,
       listener: (MobileAdEvent event) {
-        if (event == MobileAdEvent.closed ||
-            event == MobileAdEvent.failedToLoad) {
+        if (event == MobileAdEvent.closed || event == MobileAdEvent.failedToLoad) {
           setState(() {
             isAdClickable = true;
           });
@@ -177,8 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
           color: Constants.correctColor,
           icon: Icons.edit,
           onTap: (BuildContext context) async {
-            String newFileName =
-                await _showFileNameDialog(context, audioFile.title);
+            String newFileName = await _showFileNameDialog(context, audioFile.title);
             if (newFileName == null) {
               return;
             }
@@ -224,8 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<String> _showFileNameDialog(
-      BuildContext context, String currentName) async {
+  Future<String> _showFileNameDialog(BuildContext context, String currentName) async {
     return showDialog(
       context: context,
       builder: (context) {
@@ -234,8 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<int> _showEditColorDialog(BuildContext context,
-      CustomTheme currentTheme, int currentColorIndex) async {
+  Future<int> _showEditColorDialog(BuildContext context, CustomTheme currentTheme, int currentColorIndex) async {
     List<Color> _currentColorList = currentTheme.colors;
 
     return showDialog(
@@ -283,8 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // Make sure there is a scroll controller attached to the scroll view that contains ReorderableSliverList.
     // Otherwise an error will be thrown.
-    ScrollController _scrollController =
-        PrimaryScrollController.of(context) ?? ScrollController();
+    ScrollController _scrollController = PrimaryScrollController.of(context) ?? ScrollController();
 
     return Scaffold(
       backgroundColor: _theme.listBackgroundColor,
@@ -363,8 +358,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       addRepaintBoundaries: false,
                     ),
-                    buildDraggableFeedback: (context, constraints, child) =>
-                        Transform(
+                    buildDraggableFeedback: (context, constraints, child) => Transform(
                       transform: Matrix4.rotationZ(0),
                       alignment: FractionalOffset.topLeft,
                       child: Material(
@@ -400,16 +394,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   fontSize: newFontSize,
                 );
                 setState(() {
-                  _pageController.animateToPage(0,
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.ease);
+                  _pageController.animateToPage(0, duration: Duration(milliseconds: 300), curve: Curves.ease);
                   if (newTheme != null) {
                     _theme = newTheme;
                     _audioFileList.forEach((audioFile) => audioFile.update(
-                          color: newTheme.themeSet[audioFile.colorIndex]
-                              ['color'],
-                          background: newTheme.themeSet[audioFile.colorIndex]
-                              ['background'],
+                          color: newTheme.themeSet[audioFile.colorIndex]['color'],
+                          background: newTheme.themeSet[audioFile.colorIndex]['background'],
                         ));
                   }
                   if (newFontSize != null) {
@@ -428,16 +418,14 @@ class _HomeScreenState extends State<HomeScreen> {
           currentIndex: _currentPageIndex,
           onTap: (index) => setState(() {
             _currentPageIndex = index;
-            _pageController.animateToPage(index,
-                duration: Duration(milliseconds: 300), curve: Curves.ease);
+            _pageController.animateToPage(index, duration: Duration(milliseconds: 300), curve: Curves.ease);
           }),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
           elevation: 15,
           fabLocation: BubbleBottomBarFabLocation.end, //new
           hasNotch: true, //new
           hasInk: true, //new, gives a cute ink effect
-          inkColor:
-              Colors.black12, //optional, uses theme color if not specified
+          inkColor: Colors.black12, //optional, uses theme color if not specified
           items: const <BubbleBottomBarItem>[
             BubbleBottomBarItem(
               backgroundColor: Constants.wrongColor,
@@ -494,8 +482,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           _lastColorIndex = 0;
                         }
 
-                        Map<String, dynamic> selectedThemeSet =
-                            _theme.themeSet[_lastColorIndex];
+                        Map<String, dynamic> selectedThemeSet = _theme.themeSet[_lastColorIndex];
                         setState(() {
                           _audioFileList.add(new AudioFile(
                             uri: file.uri.toString(),
@@ -510,10 +497,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         // Update fileUriOrderList in sharedPref
                         saveEncodedFileOrderList(_audioFileList);
 
-                        _scrollController.animateTo(
-                            _scrollController.position.maxScrollExtent,
-                            curve: Curves.ease,
-                            duration: const Duration(milliseconds: 700));
+                        _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+                            curve: Curves.ease, duration: const Duration(milliseconds: 700));
                       },
                       onFilesImportedCb: (List<File> files) {
                         _lastColorIndex++;
@@ -522,8 +507,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         }
 
                         files.forEach((file) {
-                          Map<String, dynamic> selectedThemeSet =
-                              _theme.themeSet[_lastColorIndex];
+                          Map<String, dynamic> selectedThemeSet = _theme.themeSet[_lastColorIndex];
                           setState(() {
                             _audioFileList.add(new AudioFile(
                               uri: file.uri.toString(),

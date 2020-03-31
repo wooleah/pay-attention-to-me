@@ -38,8 +38,7 @@ class RootApp extends StatelessWidget {
       var encodedFileOrderList = await getEncodedFileOrderList();
 
       // Re-make the audioFileList when sharedPref's encodedFileOrderList is empty or it doesn't match with actual fileList
-      if (encodedFileOrderList == null ||
-          encodedFileOrderList.length != fileList.length) {
+      if (encodedFileOrderList == null || encodedFileOrderList.length != fileList.length) {
         _audioFileList = fileList.map((file) {
           int colorIndex = count % _theme.themeSet.length;
           count++;
@@ -72,13 +71,10 @@ class RootApp extends StatelessWidget {
           };
         }
 
-        _audioFileList = orderedFileList
-            .where((fileObj) => fileObj['file'] != null)
-            .map((fileObj) {
+        _audioFileList = orderedFileList.where((fileObj) => fileObj['file'] != null).map((fileObj) {
           _lastColorIndex = count % _theme.themeSet.length;
           count++;
-          Map<String, dynamic> selectedThemeSet =
-              _theme.themeSet[fileObj['colorIndex']];
+          Map<String, dynamic> selectedThemeSet = _theme.themeSet[fileObj['colorIndex']];
 
           return new AudioFile(
             uri: fileObj['file'].uri.toString(),
@@ -96,8 +92,8 @@ class RootApp extends StatelessWidget {
   }
 
   Future<void> _init() async {
-    await addTutorialVoice();
     await _preparePrevSettings();
+    await addTutorialVoice();
     await _getListOfFiles();
   }
 
@@ -122,14 +118,12 @@ class RootApp extends StatelessWidget {
                   );
                 },
                 transitionDuration: Duration(milliseconds: 500),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
                   var begin = Offset(0.0, 1.0);
                   var end = Offset.zero;
                   var curve = Curves.easeIn;
 
-                  var tween = Tween(begin: begin, end: end)
-                      .chain(CurveTween(curve: curve));
+                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
                   return SlideTransition(
                     position: animation.drive(tween),

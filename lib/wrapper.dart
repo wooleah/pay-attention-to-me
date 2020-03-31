@@ -37,8 +37,7 @@ class _WrapperState extends State<Wrapper> {
       var encodedFileOrderList = await getEncodedFileOrderList();
 
       // Re-make the audioFileList when sharedPref's encodedFileOrderList is empty or it doesn't match with actual fileList
-      if (encodedFileOrderList == null ||
-          encodedFileOrderList.length != fileList.length) {
+      if (encodedFileOrderList == null || encodedFileOrderList.length != fileList.length) {
         _audioFileList = fileList.map((file) {
           int colorIndex = count % _theme.themeSet.length;
           count++;
@@ -74,8 +73,7 @@ class _WrapperState extends State<Wrapper> {
         _audioFileList = orderedFileList.map((fileObj) {
           _lastColorIndex = count % _theme.themeSet.length;
           count++;
-          Map<String, dynamic> selectedThemeSet =
-              _theme.themeSet[fileObj['colorIndex']];
+          Map<String, dynamic> selectedThemeSet = _theme.themeSet[fileObj['colorIndex']];
           return new AudioFile(
             uri: fileObj['file'].uri.toString(),
             path: fileObj['file'].path,
