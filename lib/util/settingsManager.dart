@@ -9,9 +9,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:heyListen/util/commonFileFunc.dart';
+import '../constants.dart' as Constants;
 
 // Prepare initial voice
-Future<void> addTutorialVoice({CustomTheme theme}) async {
+Future<void> addTutorialVoice() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool gotTutorialFile = prefs.getBool('gotTutorialFile');
   if (gotTutorialFile == true) {
@@ -27,7 +28,8 @@ Future<void> addTutorialVoice({CustomTheme theme}) async {
 
     String appDir = (await getApplicationDocumentsDirectory()).path;
     // Create audio directory
-    String audioFileDirPath = (await Directory('$appDir/audio').create()).path;
+    Directory('$appDir/audio').createSync();
+    String audioFileDirPath = Directory('$appDir/audio').path;
     // Copy initial voices into the audio directory
     var file1 = await writeToFile(initialVoice1, '$audioFileDirPath/Click me.mp3');
     var file2 = await writeToFile(initialVoice2, '$audioFileDirPath/Click me next.mp3');
@@ -40,6 +42,7 @@ Future<void> addTutorialVoice({CustomTheme theme}) async {
     List<FileSystemEntity> fileList = [file1, file2, file3, file4, file5];
     List<AudioFile> audioFileList = [];
     int count = 0;
+    var theme = Constants.ThemeList[Constants.defaultThemeName];
 
     audioFileList = fileList.map((file) {
       int colorIndex = count % theme.themeSet.length;
