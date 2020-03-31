@@ -181,6 +181,9 @@ class _HomeScreenState extends State<HomeScreen> {
               return;
             }
 
+            // encode before saving
+            newFileName = Uri.encodeComponent(newFileName);
+
             Directory docDir = await getApplicationDocumentsDirectory();
             File newFile = await moveFile(
               file,
@@ -397,15 +400,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   _pageController.animateToPage(0, duration: Duration(milliseconds: 300), curve: Curves.ease);
                   if (newTheme != null) {
                     _theme = newTheme;
-                    _audioFileList.forEach((audioFile) => audioFile.update(
-                          color: newTheme.themeSet[audioFile.colorIndex]['color'],
-                          background: newTheme.themeSet[audioFile.colorIndex]['background'],
-                        ));
+                    _audioFileList.forEach(
+                      (audioFile) => audioFile.update(
+                        color: newTheme.themeSet[audioFile.colorIndex]['color'],
+                        background: newTheme.themeSet[audioFile.colorIndex]['background'],
+                      ),
+                    );
                   }
                   if (newFontSize != null) {
                     _itemFontSize = newFontSize;
                   }
                 });
+                saveEncodedFileOrderList(_audioFileList);
               },
             )
           ],
@@ -497,8 +503,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         // Update fileUriOrderList in sharedPref
                         saveEncodedFileOrderList(_audioFileList);
 
-                        _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-                            curve: Curves.ease, duration: const Duration(milliseconds: 700));
+                        _scrollController.animateTo(
+                          _scrollController.position.maxScrollExtent + MediaQuery.of(context).size.height,
+                          curve: Curves.ease,
+                          duration: const Duration(milliseconds: 700),
+                        );
                       },
                       onFilesImportedCb: (List<File> files) {
                         _lastColorIndex++;
@@ -524,7 +533,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         saveEncodedFileOrderList(_audioFileList);
 
                         _scrollController.animateTo(
-                          _scrollController.position.maxScrollExtent,
+                          _scrollController.position.maxScrollExtent + MediaQuery.of(context).size.height,
                           curve: Curves.ease,
                           duration: const Duration(milliseconds: 700),
                         );

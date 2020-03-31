@@ -9,13 +9,20 @@ class AudioFile {
   String background;
 
   AudioFile({
-    this.path,
-    this.uri,
-    this.title,
-    this.color,
-    this.colorIndex,
-    this.background,
-  });
+    String path,
+    String uri,
+    String title,
+    Color color,
+    int colorIndex,
+    String background,
+  }) {
+    this.path = path;
+    this.uri = uri;
+    this.title = Uri.decodeComponent(title);
+    this.color = color;
+    this.colorIndex = colorIndex;
+    this.background = background;
+  }
 
   update({
     String newPath,
@@ -32,7 +39,7 @@ class AudioFile {
       this.uri = newUri;
     }
     if (newTitle != null) {
-      this.title = newTitle;
+      this.title = Uri.decodeComponent(newTitle);
     }
     if (color != null) {
       this.color = color;

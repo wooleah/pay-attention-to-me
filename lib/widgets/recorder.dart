@@ -15,14 +15,7 @@ import 'package:heyListen/util/commonFileFunc.dart';
 
 import 'package:heyListen/constants.dart' as Constants;
 
-enum RecorderState {
-  RECORD_READY,
-  RECORDING,
-  RECORD_DONE,
-  PLAYING,
-  PAUSED,
-  PLAY_DONE
-}
+enum RecorderState { RECORD_READY, RECORDING, RECORD_DONE, PLAYING, PAUSED, PLAY_DONE }
 
 class Recorder extends StatefulWidget {
   final Function onFileSaveCb;
@@ -100,14 +93,11 @@ class _RecorderState extends State<Recorder> {
                     Directory docDir = await getApplicationDocumentsDirectory();
                     // Copy all of the files to the audio dir
                     importedFiles.forEach((file) {
-                      String fileName =
-                          path.basenameWithoutExtension(file.path);
-                      copiedFileFutureList
-                          .add(file.copy('${docDir.path}/audio/$fileName.aac'));
+                      String fileName = path.basenameWithoutExtension(file.path);
+                      copiedFileFutureList.add(file.copy('${docDir.path}/audio/$fileName.aac'));
                     });
                     // And wait till all of them resolves
-                    List<File> copiedFiles =
-                        await Future.wait(copiedFileFutureList);
+                    List<File> copiedFiles = await Future.wait(copiedFileFutureList);
                     widget.onFilesImportedCb(copiedFiles);
                     Navigator.of(context).pop();
                   },
@@ -155,11 +145,12 @@ class _RecorderState extends State<Recorder> {
                           return;
                         }
 
+                        // encode before saving
+                        text = Uri.encodeComponent(text);
+
                         File file = File(_recordedFilePath);
-                        Directory docDir =
-                            await getApplicationDocumentsDirectory();
-                        File newFile = await moveFile(
-                            file, '${docDir.path}/audio', '$text.aac');
+                        Directory docDir = await getApplicationDocumentsDirectory();
+                        File newFile = await moveFile(file, '${docDir.path}/audio', '$text.aac');
                         widget.onFileSaveCb(newFile);
                         Navigator.of(context).pop();
                       },
@@ -167,8 +158,7 @@ class _RecorderState extends State<Recorder> {
                   'Save',
                   style: TextStyle(
                     fontSize: 20,
-                    color:
-                        _isSaveButtonDisabled ? Colors.white24 : Colors.white,
+                    color: _isSaveButtonDisabled ? Colors.white24 : Colors.white,
                   ),
                 ),
               ),
@@ -330,8 +320,7 @@ class _RecorderState extends State<Recorder> {
           ),
           content: TextField(
             controller: _fileNameTextFieldController,
-            decoration: InputDecoration(
-                hintText: 'My file name', hintStyle: TextStyle()),
+            decoration: InputDecoration(hintText: 'My file name', hintStyle: TextStyle()),
           ),
           actions: <Widget>[
             FlatButton(
