@@ -91,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
   InterstitialAd createInterstitialAd() {
     return InterstitialAd(
       // adUnitId: Constants.PROD_ADUNIT_ID,
-      adUnitId: Constants.TEST_ADUNIT_ID,
+      adUnitId: Constants.PROD_ADUNIT_ID,
       targetingInfo: _targetingInfo,
       listener: (MobileAdEvent event) {
         if (event == MobileAdEvent.closed ||
