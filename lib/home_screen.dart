@@ -91,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
   InterstitialAd createInterstitialAd() {
     return InterstitialAd(
       // adUnitId: Constants.PROD_ADUNIT_ID,
-      adUnitId: Constants.PROD_ADUNIT_ID,
+      adUnitId: Constants.TEST_ADUNIT_ID,
       targetingInfo: _targetingInfo,
       listener: (MobileAdEvent event) {
         if (event == MobileAdEvent.closed || event == MobileAdEvent.failedToLoad) {
@@ -308,10 +308,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     expandedHeight: MediaQuery.of(context).size.height / 4,
                     backgroundColor: _theme.appTitleBackgroundColor,
                     actions: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          MaterialCommunityIcons.gift,
-                          color: _theme.appTitleColor,
+                      RaisedButton(
+                        color: Colors.transparent,
+                        elevation: 0,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              Entypo.video,
+                              color: _theme.appTitleColor,
+                            ),
+                            Text(
+                              'Support Us',
+                              style: TextStyle(
+                                color: _theme.appTitleColor,
+                                fontFamily: 'AmaticSC',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            )
+                          ],
                         ),
                         disabledColor: _theme.appTitleColor.withOpacity(0.3),
                         onPressed: isAdClickable
@@ -333,7 +349,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ..show();
                               }
                             : null,
-                      )
+                      ),
                     ],
                     flexibleSpace: FlexibleSpaceBar(
                       title: Text(
